@@ -53,6 +53,7 @@ Seven items were resolved, confirmed, or corrected against primary sources durin
 5. CDL scale **updated**: CAD $64B / 670+ companies / 17 locations / 24 streams (was $56B / 630+ / 13)
 6. New paper added: *Genius on Demand*, NBER WP 34316, Oct 2025
 7. Two real adoption data series sourced for the Between Times chart (Devine 1983; US Census BTOS)
+8. Three dead links in the source dossier fixed or removed (Wikipedia CDL article is gone; Sanctuary bio 404; HBR article cited with the wrong month)
 
 Claims carry confidence chips throughout: `VERIFIED`, `DISPUTED`, `UNVERIFIED`, `UPDATED`.
 Where sources genuinely conflict, such as his MBA institution, both readings are shown and
