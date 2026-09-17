@@ -59,6 +59,21 @@ Claims carry confidence chips throughout: `VERIFIED`, `DISPUTED`, `UNVERIFIED`, 
 Where sources genuinely conflict, such as his MBA institution, both readings are shown and
 neither is adjudicated.
 
+## Dark mode
+
+Three states in the masthead control: **Auto** (follows `prefers-color-scheme`, the default),
+**Light**, **Dark**. An explicit choice persists in `localStorage` and is applied by an inline
+script before first paint, so a dark viewer never sees a light flash.
+
+The charts are the non-trivial part. SVG presentation attributes cannot take `var()`, so
+`app.js` reads the palette out of the stylesheet with `readColors()` and each of the ten charts
+registers a redraw in `REDRAW`. Switching theme re-reads the palette and rebuilds every chart
+while preserving each widget's current selection. **If you add a chart, register its redraw.**
+
+Both themes clear WCAG AA (4.5:1) on every text pair, verified against all three background
+tokens. Fixing the dark palette surfaced two light-theme colours that had been failing AA
+(`--ink-faint`, `--flag`); both were corrected.
+
 ## Build
 
 No build step, no dependencies. Three files: `index.html`, `style.css`, `app.js`.

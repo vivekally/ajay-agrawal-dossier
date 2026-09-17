@@ -12,11 +12,27 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script>
+/* Applied before first paint so a stored dark choice never flashes light. */
+(function(){try{var t=localStorage.getItem("aa-theme");
+if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+</script>
 </head>
 <body>
 
 <header class="masthead">
   <div class="wrap">
+    <div class="themectl" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-set="system" aria-pressed="true" title="Follow the system setting">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg><span class="tlab">Auto</span>
+      </button>
+      <button type="button" data-theme-set="light" aria-pressed="false" title="Always light">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M19.1 4.9l-1.5 1.5M6.4 17.6l-1.5 1.5"/></svg><span class="tlab">Light</span>
+      </button>
+      <button type="button" data-theme-set="dark" aria-pressed="false" title="Always dark">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a6.8 6.8 0 0 0 11 11z"/></svg><span class="tlab">Dark</span>
+      </button>
+    </div>
     <p class="eyebrow">Research Dossier · Compiled September 2026</p>
     <h1>Ajay Agrawal</h1>
     <p class="subtitle">Geoffrey Taber Chair in Entrepreneurship and Innovation and Professor of Strategic Management at the Rotman School of Management, University of Toronto. Founder of the Creative Destruction Lab. Co-author of the three books that made "AI is cheap prediction" the default frame in business economics.</p>
@@ -404,8 +420,8 @@
       </div>
       <div id="viz-between"></div>
       <div class="legend">
-        <span><i style="background:#8A6D1F"></i>US manufacturing horsepower from electricity, 1899 to 1929</span>
-        <span><i style="background:#A8451F"></i>US firms using AI to produce goods or services, 2023 to 2026</span>
+        <span><i style="background:var(--flag)"></i>US manufacturing horsepower from electricity, 1899 to 1929</span>
+        <span><i style="background:var(--pp)"></i>US firms using AI to produce goods or services, 2023 to 2026</span>
       </div>
       <div class="detail" id="between-detail">
         <h4>Hover a point</h4>

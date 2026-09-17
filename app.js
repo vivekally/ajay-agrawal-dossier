@@ -5,8 +5,25 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var esc = function (s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); };
   var NS = "http://www.w3.org/2000/svg";
-  var C = { pm: "#1F5F7A", pp: "#A8451F", brass: "#8A6D1F", ok: "#3F6B45", ink: "#17171A",
-            soft: "#55555F", faint: "#8A8A94", rule: "#E2DED4", ruleS: "#CFC9BC", sunk: "#F0EDE5", raised: "#FFFDF8" };
+  /* Chart colours are read from the stylesheet rather than hard-coded, so the same
+     render function produces a light or a dark chart. Re-read on every theme change. */
+  var C = {};
+  var COLOR_MAP = { pm: "--pm", pp: "--pp", brass: "--flag", ok: "--ok", ink: "--ink",
+    soft: "--ink-soft", faint: "--ink-faint", rule: "--rule", ruleS: "--rule-strong",
+    sunk: "--paper-sunk", raised: "--paper-raised" };
+  var FALLBACK = { pm: "#1F5F7A", pp: "#A8451F", brass: "#7F631B", ok: "#3F6B45", ink: "#17171A",
+    soft: "#55555F", faint: "#6A6A75", rule: "#E2DED4", ruleS: "#CFC9BC", sunk: "#F0EDE5", raised: "#FFFDF8" };
+  function readColors() {
+    var cs = getComputedStyle(document.documentElement);
+    Object.keys(COLOR_MAP).forEach(function (k) {
+      C[k] = (cs.getPropertyValue(COLOR_MAP[k]) || "").trim() || FALLBACK[k];
+    });
+  }
+  readColors();
+
+  /* Every chart that bakes a colour into markup registers a redraw here. */
+  var REDRAW = [];
+  function redrawAll() { readColors(); REDRAW.forEach(function (f) { try { f(); } catch (e) {} }); }
 
   /* ---------------- Tabs ---------------- */
   var tabs = $$(".tab"), panels = $$(".panel");
@@ -66,6 +83,8 @@
   function money(n) { return "$" + n.toLocaleString("en-CA", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   (function salary() {
     var host = $("#viz-salary"), det = $("#salary-detail"); if (!host) return;
+    var cur = 7;
+    function draw() {
     var W = 760, H = 260, pad = { t: 14, r: 12, b: 34, l: 56 };
     var max = 520000, iw = W - pad.l - pad.r, ih = H - pad.t - pad.b;
     var bw = iw / SALARY.length, s = "";
@@ -82,7 +101,10 @@
     });
     s += '<line class="axis" x1="' + pad.l + '" y1="' + (pad.t + ih) + '" x2="' + (W - pad.r) + '" y2="' + (pad.t + ih) + '"/>';
     host.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Salary by year">' + s + '</svg>';
+    pick(cur);
+    }
     function pick(i) {
+      cur = i;
       var d = SALARY[i];
       $$(".sal-bar", host).forEach(function (r, j) { r.setAttribute("opacity", j === i ? "1" : (SALARY[j].q ? ".4" : ".55")); });
       det.innerHTML = '<h4>' + (d.q ? "Most recent disclosure, year unstated" : d.y) + '</h4>' +
@@ -95,23 +117,24 @@
     }
     host.addEventListener("click", function (e) { var r = e.target.closest(".sal-bar"); if (r) pick(+r.dataset.i); });
     host.addEventListener("mouseover", function (e) { var r = e.target.closest(".sal-bar"); if (r) pick(+r.dataset.i); });
-    pick(7);
+    draw();
+    REDRAW.push(draw);
   })();
 
   /* ---------------- 03.2 Price change engine ---------------- */
   var ENGINE = [
-    { k: "Machine prediction used", rel: "inv", col: C.pm, note: "quantity demanded" },
-    { k: "Value of human forecasting", rel: "dir", col: C.faint, note: "substitute" },
-    { k: "Value of human judgment", rel: "inv", col: C.ok, note: "complement" },
-    { k: "Value of data", rel: "inv", col: C.ok, note: "complement" },
-    { k: "Value of action / execution", rel: "inv", col: C.ok, note: "complement" }
+    { k: "Machine prediction used", rel: "inv", col: "pm", note: "quantity demanded" },
+    { k: "Value of human forecasting", rel: "dir", col: "faint", note: "substitute" },
+    { k: "Value of human judgment", rel: "inv", col: "ok", note: "complement" },
+    { k: "Value of data", rel: "inv", col: "ok", note: "complement" },
+    { k: "Value of action / execution", rel: "inv", col: "ok", note: "complement" }
   ];
   (function engine() {
     var sl = $("#pm-cost"), out = $("#pm-cost-out"), host = $("#pm-bars"), vd = $("#pm-engine-verdict");
     if (!sl) return;
     host.innerHTML = ENGINE.map(function (d, i) {
       return '<div class="barrow"><span class="bl">' + d.k + '</span>' +
-        '<span class="bartrack"><span class="barfill" id="ef' + i + '" style="background:' + d.col + '"></span></span>' +
+        '<span class="bartrack"><span class="barfill" id="ef' + i + '"></span></span>' +
         '<span class="bv" id="ev' + i + '"></span></div>';
     }).join("");
     var STATES = [
@@ -126,15 +149,18 @@
       ENGINE.forEach(function (d, i) {
         var v = d.rel === "inv" ? (12 + cheap * 88) : (95 - cheap * 72);
         if (d.k === "Machine prediction used") v = 3 + Math.pow(cheap, 1.55) * 97;
-        $("#ef" + i).style.width = v.toFixed(1) + "%";
+        var fill = $("#ef" + i);
+        fill.style.width = v.toFixed(1) + "%";
+        fill.style.background = C[d.col];
         var el = $("#ev" + i);
         el.textContent = (d.rel === "inv" ? "+" : "") + Math.round(v);
-        el.style.color = d.rel === "inv" ? d.col : C.faint;
+        el.style.color = d.rel === "inv" ? C[d.col] : C.faint;
       });
       var st = c > 75 ? STATES[0] : c > 45 ? STATES[1] : c > 18 ? STATES[2] : STATES[3];
       vd.innerHTML = '<span class="vt">Where we are</span><span class="vb">' + st.t + '</span><p class="vd">' + st.d + '</p>';
     }
     sl.addEventListener("input", render); render();
+    REDRAW.push(render);
   })();
 
   /* ---------------- 03.3 Anatomy of a decision ---------------- */
@@ -149,6 +175,8 @@
   };
   (function anatomy() {
     var host = $("#viz-anatomy"), det = $("#anatomy-detail"); if (!host) return;
+    var cur = "prediction";
+    function draw() {
     var W = 760, H = 290;
     function box(id, x, y, w, h, label, fill, stroke, tcol) {
       return '<g class="hot anat" data-k="' + id + '"><rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h +
@@ -182,13 +210,17 @@
       s += '<line x1="' + (x + dw / 2) + '" y1="' + dy + '" x2="' + (x + dw / 2) + '" y2="' + (dy - 12) + '" stroke="' + C.ruleS + '" stroke-width="1" stroke-dasharray="3 3"/>';
     });
     host.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Anatomy of a decision">' + s + '</svg>';
+    pick(cur);
+    }
     function pick(k) {
       var d = ANATOMY[k]; if (!d) return;
+      cur = k;
       $$(".anat", host).forEach(function (g) { g.style.opacity = g.dataset.k === k ? "1" : ".45"; });
       det.innerHTML = "<h4>" + d.t + "</h4>" + d.d + '<span class="who">Supplied by: ' + d.who + "</span>";
     }
     host.addEventListener("click", function (e) { var g = e.target.closest(".anat"); if (g) pick(g.dataset.k); });
-    pick("prediction");
+    draw();
+    REDRAW.push(draw);
   })();
 
   /* ---------------- 03.4 AI Canvas ---------------- */
@@ -293,7 +325,9 @@
       var cx = pad.l + (a / 100) * iw, cy = pad.t + ih - (ret / 100) * ih;
       s += '<line x1="' + cx + '" y1="' + pad.t + '" x2="' + cx + '" y2="' + (pad.t + ih) + '" stroke="' + C.ruleS + '" stroke-width="1"/>';
       s += '<circle cx="' + cx + '" cy="' + cy + '" r="6" fill="' + (a >= THRESH ? C.ok : C.pm) + '"/>';
-      s += '<text class="lab-b" x="' + (cx + (a > 62 ? -12 : 12)) + '" y="' + (cy - 12) + '" text-anchor="' + (a > 62 ? "end" : "start") + '" fill="' + (a >= THRESH ? C.ok : C.pm) + '">' + ret + '% returned</text>';
+      // Near the top of the plot the value label would sit on the axis caption, so drop it below the dot.
+      var labY = ret > 82 ? cy + 20 : cy - 12;
+      s += '<text class="lab-b" x="' + (cx + (a > 62 ? -12 : 12)) + '" y="' + labY + '" text-anchor="' + (a > 62 ? "end" : "start") + '" fill="' + (a >= THRESH ? C.ok : C.pm) + '">' + ret + '% returned</text>';
       s += '<line class="axis" x1="' + pad.l + '" y1="' + (pad.t + ih) + '" x2="' + (W - pad.r) + '" y2="' + (pad.t + ih) + '"/>';
       s += '<text class="lab-s" x="' + pad.l + '" y="' + (H - 12) + '">low accuracy</text>';
       s += '<text class="lab-s" x="' + (W - pad.r) + '" y="' + (H - 12) + '" text-anchor="end">near-perfect accuracy</text>';
@@ -317,6 +351,7 @@
       vd.style.borderColor = a >= THRESH ? C.ok : "";
     }
     sl.addEventListener("input", render); render();
+    REDRAW.push(render);
   })();
 
   /* ---------------- Chapter maps ---------------- */
@@ -377,16 +412,19 @@
   };
   (function levels() {
     var host = $("#viz-levels"), det = $("#levels-detail"); if (!host) return;
+    var cur = "point";
     host.innerHTML = ["roi", "disrupt", "resist"].map(function (k, i) {
       var lab = ["Potential return", "Disruption to the system", "Resistance you should expect"][i];
       return '<div class="barrow"><span class="bl">' + lab + '</span>' +
-        '<span class="bartrack"><span class="barfill" id="lv-' + k + '" style="background:' + C.pp + '"></span></span>' +
+        '<span class="bartrack"><span class="barfill" id="lv-' + k + '"></span></span>' +
         '<span class="bv" id="lvv-' + k + '"></span></div>';
     }).join("");
     function pick(v) {
+      cur = v;
       var d = LEVELS[v];
       ["roi", "disrupt", "resist"].forEach(function (k) {
         $("#lv-" + k).style.width = d[k] + "%";
+        $("#lv-" + k).style.background = C.pp;
         $("#lvv-" + k).textContent = d[k] < 25 ? "Low" : d[k] < 60 ? "Medium" : "High";
       });
       det.innerHTML = "<h4>" + d.n + "</h4>" +
@@ -397,6 +435,7 @@
     }
     seg("#level-picker", "data-lvl", pick);
     pick("point");
+    REDRAW.push(function () { pick(cur); });
   })();
 
   /* ---------------- 04.3 The Between Times ---------------- */
@@ -461,6 +500,7 @@
     host.addEventListener("click", function (e) { var c = e.target.closest(".bt-pt"); if (c) pick(c.dataset.s, +c.dataset.i); });
     seg("#between-picker", "data-series", function (v) { mode = v; render(); });
     render();
+    REDRAW.push(render);
     det.innerHTML = "<h4>What the overlay actually shows</h4>" +
       "<p>At the same elapsed time, around year 14, electricity was powering under 5% of American manufacturing. AI is at 17% to 20% of American firms. On this measure AI is diffusing faster than electrification did, not slower.</p>" +
       "<p>That cuts slightly against the patient reading of the analogy. The book's defence is that adoption is not the same as transformation: firms using AI are overwhelmingly using it as a point solution, exactly as factories first used electric motors to turn the old line shaft. The forty-year lag was never about how many factories had electricity. It was about how long it took to stop building factories around a shaft that was no longer there.</p>" +
@@ -490,7 +530,9 @@
         '<span class="barfill" id="gl-' + k + '" style="background:' + C.pp + '"></span></span>' +
         '<span class="bv" id="glv-' + k + '"></span></div>';
     }).join("");
+    var cur = "glued";
     function pick(v) {
+      cur = v;
       var d = GLUE[v];
       Object.keys(d.bars).forEach(function (k) {
         $("#gl-" + k).style.width = d.bars[k] + "%";
@@ -503,6 +545,7 @@
     }
     seg("#glue-picker", "data-glue", pick);
     pick("glued");
+    REDRAW.push(function () { pick(cur); });
   })();
 
   /* ---------------- 04.5 Flint ---------------- */
@@ -543,8 +586,10 @@
       var d = FLINT[stage];
       det.innerHTML = "<h4>" + (stage + 1) + ". " + d.t + "</h4>" + d.n + '<span class="who">' + d.who + "</span>";
     }
-    seg("#flint-picker", "data-stage", function (v) { render(+v); });
+    var cur = 0;
+    seg("#flint-picker", "data-stage", function (v) { cur = +v; render(cur); });
     render(0);
+    REDRAW.push(function () { render(cur); });
   })();
 
   /* ---------------- 04.6 AI Systems Discovery Canvas ---------------- */
@@ -574,10 +619,10 @@
 
   /* ---------------- 05.1 Research arc ---------------- */
   var THEMES = {
-    knowledge: { n: "Knowledge transfer", c: "#1F5F7A", row: 0 },
-    geography: { n: "Geography & mobility", c: "#3F6B45", row: 1 },
-    entre: { n: "Entrepreneurship & finance", c: "#8A6D1F", row: 2 },
-    ai: { n: "Economics of AI", c: "#A8451F", row: 3 }
+    knowledge: { n: "Knowledge transfer", ck: "pm", row: 0 },
+    geography: { n: "Geography & mobility", ck: "ok", row: 1 },
+    entre: { n: "Entrepreneurship & finance", ck: "brass", row: 2 },
+    ai: { n: "Economics of AI", ck: "pp", row: 3 }
   };
   var PAPERS = [
     { y: 2001, th: "knowledge", t: "University-to-industry knowledge transfer: literature review and unanswered questions", v: "Int. J. Management Reviews 3(4)", n: "Framed the research agenda for the whole field." },
@@ -625,7 +670,7 @@
         var th = THEMES[k], on = (filter === "all" || filter === k);
         s += '<line x1="' + pad.l + '" y1="' + ROWY(th.row) + '" x2="' + (W - pad.r) + '" y2="' + ROWY(th.row) +
           '" stroke="' + C.rule + '" stroke-width="1" opacity="' + (on ? "1" : ".4") + '"/>';
-        s += '<text class="lab-s" x="' + pad.l + '" y="' + (ROWY(th.row) - 8) + '" fill="' + th.c + '" opacity="' + (on ? "1" : ".3") + '">' + th.n.toUpperCase() + '</text>';
+        s += '<text class="lab-s" x="' + pad.l + '" y="' + (ROWY(th.row) - 8) + '" fill="' + C[th.ck] + '" opacity="' + (on ? "1" : ".3") + '">' + th.n.toUpperCase() + '</text>';
       });
       for (var y = 2000; y <= 2025; y += 5) {
         s += '<line class="gridline" x1="' + X(y) + '" y1="' + pad.t + '" x2="' + X(y) + '" y2="' + (H - pad.b + 6) + '"/>';
@@ -638,7 +683,7 @@
         var off = (seen[key] - 1) * 9;
         var th = THEMES[p.th], on = (filter === "all" || filter === p.th);
         s += '<circle class="hot arc-pt" data-i="' + i + '" cx="' + (X(p.y) + off) + '" cy="' + ROWY(th.row) +
-          '" r="6.5" fill="' + th.c + '" opacity="' + (on ? ".85" : ".13") + '" stroke="' + C.raised + '" stroke-width="1.5"/>';
+          '" r="6.5" fill="' + C[th.ck] + '" opacity="' + (on ? ".85" : ".13") + '" stroke="' + C.raised + '" stroke-width="1.5"/>';
       });
       s += '<line x1="' + X(2016) + '" y1="' + (pad.t - 6) + '" x2="' + X(2016) + '" y2="' + (H - pad.b + 6) +
         '" stroke="' + C.pp + '" stroke-width="1.5" stroke-dasharray="4 4" opacity=".6"/>';
@@ -654,6 +699,7 @@
     host.addEventListener("click", function (e) { var c = e.target.closest(".arc-pt"); if (c) pick(+c.dataset.i); });
     seg("#arc-picker", "data-theme", function (v) { filter = v; render(); });
     render();
+    REDRAW.push(render);
   })();
 
   /* ---------------- 06.1 CDL equity value ---------------- */
@@ -666,6 +712,8 @@
   ];
   (function cdl() {
     var host = $("#viz-cdl"), det = $("#cdl-detail"); if (!host) return;
+    var cur = 4;
+    function draw() {
     var W = 760, H = 240, pad = { t: 18, r: 14, b: 36, l: 50 }, MAX = 70;
     var iw = W - pad.l - pad.r, ih = H - pad.t - pad.b, bw = iw / CDLV.length, s = "";
     [0, 20, 40, 60].forEach(function (g) {
@@ -682,7 +730,10 @@
     s += '<line class="axis" x1="' + pad.l + '" y1="' + (pad.t + ih) + '" x2="' + (W - pad.r) + '" y2="' + (pad.t + ih) + '"/>';
     s += '<text class="lab" x="' + (pad.l - 38) + '" y="' + (pad.t - 4) + '">CAD equity value, cumulative, as reported</text>';
     host.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="CDL reported equity value">' + s + '</svg>';
+    pick(cur);
+    }
     function pick(i) {
+      cur = i;
       var d = CDLV[i];
       $$(".cdl-bar", host).forEach(function (r, j) { r.setAttribute("opacity", j === i ? "1" : ".45"); });
       det.innerHTML = "<h4>" + d.y + "</h4><p><span class=\"num\" style=\"font-size:1.25rem;font-weight:600;color:var(--accent)\">CAD $" +
@@ -691,7 +742,44 @@
     }
     host.addEventListener("mouseover", function (e) { var r = e.target.closest(".cdl-bar"); if (r) pick(+r.dataset.i); });
     host.addEventListener("click", function (e) { var r = e.target.closest(".cdl-bar"); if (r) pick(+r.dataset.i); });
-    pick(4);
+    draw();
+    REDRAW.push(draw);
+  })();
+
+  /* ---------------- Theme control ---------------- */
+  (function theme() {
+    var ctl = $(".themectl"); if (!ctl) return;
+    var KEY = "aa-theme", root = document.documentElement;
+    var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+
+    function stored() {
+      try { var v = localStorage.getItem(KEY); return (v === "dark" || v === "light") ? v : "system"; }
+      catch (e) { return "system"; }
+    }
+    function apply(mode, persist) {
+      if (mode === "system") root.removeAttribute("data-theme");
+      else root.setAttribute("data-theme", mode);
+      if (persist) {
+        try { mode === "system" ? localStorage.removeItem(KEY) : localStorage.setItem(KEY, mode); }
+        catch (e) { /* private window, or site data blocked: the choice just will not persist */ }
+      }
+      $$("button", ctl).forEach(function (b) {
+        b.setAttribute("aria-pressed", b.getAttribute("data-theme-set") === mode ? "true" : "false");
+      });
+      // Charts bake colours into markup, so they have to be rebuilt from the new palette.
+      requestAnimationFrame(redrawAll);
+    }
+    ctl.addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-theme-set]"); if (!b) return;
+      apply(b.getAttribute("data-theme-set"), true);
+    });
+    // Follow the OS while in Auto.
+    if (mq) {
+      var onSys = function () { if (stored() === "system") requestAnimationFrame(redrawAll); };
+      if (mq.addEventListener) mq.addEventListener("change", onSys);
+      else if (mq.addListener) mq.addListener(onSys);
+    }
+    apply(stored(), false);
   })();
 
   routeFromHash();
