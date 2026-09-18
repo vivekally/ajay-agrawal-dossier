@@ -41,6 +41,34 @@ Eight tabs, each deep-linkable by hash (`#pm`, `#pp-between`, and so on):
 
 **Elsewhere:** salary history, research arc by theme over 25 years, CDL equity value over time.
 
+## Second research pass
+
+After the site first went live it was re-examined for gaps. That pass changed more than the
+first one did:
+
+- **h-index, previously "not found."** Google Scholar blocks bots, but Semantic Scholar
+  (h=37, 79 papers) and OpenAlex (h=35, i10=58, 118 works) do not. Every title in both records
+  was checked by hand against the name-collision problem; a third OpenAlex record (h=25) turned
+  out to be contaminated with liposome pharmacology and is unusable.
+- **Nine works published since 2022 that the dossier omitted**, including
+  [*Do we want less automation?*](https://www.science.org/doi/10.1126/science.adh9429) in
+  **Science** (2023) and
+  [*Generative AI Is Still Just a Prediction Machine*](https://hbr.org/2024/11/generative-ai-is-still-just-a-prediction-machine)
+  (HBR, 2024).
+- **A whole research strand was missing**: the COVID-19 workplace-testing studies in *Science
+  Advances* and *JAMA*. The second book's "oiled system" set piece is his own field research,
+  not a borrowed anecdote.
+- **Full salary history 2004 to 2025** (was 2014 to 2020 plus one undated figure). The undated
+  $492,964.94 is **2024**. 2025 is $537,683, ranking 109th of 404,915 on the Ontario list.
+- **Genpact director pay, previously "not found"**, read straight from the DEF 14A filings:
+  FY2023 $287,483 and FY2025 $297,484.
+- **Two claims on this site were corrected**, not just extended. It had said *Power and
+  Prediction* answers none of Kotlikoff's objections and had left the generative-AI objection
+  hanging as an open inference. The authors answered both in print, in *Science* and in HBR.
+  Those answers are now cited and the original claims marked as superseded.
+- **One attribution trap avoided**: *O-Ring Automation* (NBER w34639, 2026) sits alongside this
+  work and is Gans and Goldfarb only, not Agrawal.
+
 ## Research provenance
 
 Built from two research dossiers, both preserved verbatim in [`research/`](research/).

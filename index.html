@@ -69,7 +69,7 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
   <p class="lede">A Canadian economist who spent two decades studying how knowledge moves out of universities, then built the institution that moves it, then wrote the books that told everyone else how to think about the technology doing the moving.</p>
 
   <div class="grid g4" style="margin-bottom:2.6rem">
-    <div class="stat"><span class="v">~28,270</span><span class="k">Google Scholar citations</span><span class="src">Profile total, most recent snapshot <span class="chip u">Unverified</span></span></div>
+    <div class="stat"><span class="v">h = 35-37</span><span class="k">h-index, from the two open bibliometric databases that can be audited</span><span class="src">Semantic Scholar, OpenAlex. Google Scholar total ~28,270 <span class="chip v">Verified</span></span></div>
     <div class="stat"><span class="v">$64B</span><span class="k">CAD equity value created by CDL graduate companies</span><span class="src"><a href="https://creativedestructionlab.com/blog/2025-26-graduate-companies/" target="_blank" rel="noopener">CDL 2025/26</a> <span class="chip v">Verified</span></span></div>
     <div class="stat"><span class="v">6</span><span class="k">Books authored or co-edited</span><span class="src">2018 to 2026 <span class="chip v">Verified</span></span></div>
     <div class="stat"><span class="v">2022</span><span class="k">Appointed Member of the Order of Canada</span><span class="src"><a href="https://www.gg.ca/en/honours/recipients/146-39147" target="_blank" rel="noopener">Governor General</a> <span class="chip v">Verified</span></span></div>
@@ -143,16 +143,26 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
   <div class="section" id="s-comp">
     <h2><span class="sn">01.4</span>Public compensation record</h2>
     <p>Ontario's <a href="https://www.ontario.ca/page/public-sector-salary-disclosure" target="_blank" rel="noopener">Public Sector Salary Disclosure</a>, known as the Sunshine List, publishes the salary of every public sector employee earning over $100,000. Agrawal appears under "Professor of Strategic Management" at the University of Toronto. This covers his university salary only, and excludes book royalties, board compensation, advisory fees, and private equity stakes.</p>
+    <p>The shape of the series is worth reading alongside the rest of this page. He roughly triples between 2004 and 2016, and the single largest jump, 24%, lands in 2016, the year the machine-intelligence work started appearing. The 2025 figure of <span class="num">$537,683</span> places him <span class="num">109th</span> out of <span class="num">404,915</span> people on the entire Ontario public sector list, and 17th of 7,392 at the University of Toronto.</p>
     <div class="viz">
-      <div class="viz-head"><h3>University of Toronto salary, 2014 onward</h3><span class="viz-tag">Interactive</span></div>
-      <p class="viz-sub">Hover or tap any bar for the exact disclosed figure and taxable benefits.</p>
+      <div class="viz-head"><h3>University of Toronto salary, 2004 to 2025</h3><span class="viz-tag">Interactive</span></div>
+      <p class="viz-sub">The full disclosed history, twenty-two years. Hover or tap any bar for the exact figure and what was happening that year.</p>
       <div id="viz-salary"></div>
       <div class="detail" id="salary-detail"><h4>Ontario Sunshine List</h4><p>Select a year to see the disclosed amount.</p></div>
-      <p class="viz-note">Source: Ontario Public Sector Salary Disclosure, aggregated by <a href="https://www.ontariosunshinelist.com/people/ajay-agrawal/university-of-toronto" target="_blank" rel="noopener">ontariosunshinelist.com</a> and <a href="https://opengovca.com/ontario-employee/ajay-agrawal" target="_blank" rel="noopener">opengovca.com</a>. The most recent figure of $492,964.94 appears without a stated year and is plotted as "recent"; confirm the year against the official ontario.ca dataset before citing it. <span class="chip u">Unverified year</span></p>
+      <p class="viz-note">Source: Ontario Public Sector Salary Disclosure, aggregated by <a href="https://www.ontariosunshinelist.com/people/ajay-agrawal/university-of-toronto" target="_blank" rel="noopener">ontariosunshinelist.com</a>. <strong>The year is now resolved.</strong> The source dossier carried $492,964.94 with no year attached and flagged it for confirmation; it is <strong>2024</strong>. The series also now runs back to 2004 and forward to 2025, neither of which the dossier had. <span class="chip v">Resolved</span></p>
     </div>
     <div class="card">
-      <h4>What is not disclosed</h4>
-      <p style="margin-bottom:0">Genpact board pay is the other known stream. He was an independent director from January 2019 until 2025 and sat on the Nominating and Governance Committee. Genpact non-employee directors receive an annual cash retainer plus restricted stock units, with a stock ownership guideline of five times the annual cash retainer. The exact dollar amount paid to Agrawal was not captured; it sits in the Genpact DEF 14A "Director Compensation" table. <span class="chip u">Not found</span></p>
+      <h4>Genpact board compensation <span class="chip v">Resolved</span></h4>
+      <p>The source dossier listed this as not found and pointed at the Genpact DEF 14A "Director Compensation" table. Pulled from the filings directly:</p>
+      <div class="tw" style="margin-bottom:14px"><table>
+        <thead><tr><th>Fiscal year</th><th>Cash fees</th><th>Stock awards</th><th>Other</th><th>Total</th><th>Filing</th></tr></thead>
+        <tbody>
+          <tr><td class="num">2023</td><td class="num">$87,500</td><td class="num">$199,983</td><td class="num">$0</td><td class="num"><strong>$287,483</strong></td><td><a href="https://www.sec.gov/Archives/edgar/data/1398659/000114036124014255/ny20016756x2_def14a.htm" target="_blank" rel="noopener">2024 DEF 14A</a></td></tr>
+          <tr><td class="num">2025</td><td class="num">$87,500</td><td class="num">$209,984</td><td class="num">$0</td><td class="num"><strong>$297,484</strong></td><td><a href="https://www.sec.gov/Archives/edgar/data/1398659/000114036126008973/ny20066229x771_def14a.htm" target="_blank" rel="noopener">2026 DEF 14A</a></td></tr>
+        </tbody>
+      </table></div>
+      <p>Two things follow. His cash retainer held flat at $87,500 while the equity grant rose, matching Genpact's stated policy of emphasising equity over cash. And he appears in the FY2025 table, confirming he served the full year before not standing for re-election.</p>
+      <p style="margin-bottom:0">One refinement to the dossier: the director share-ownership guideline is five times the annual cash retainer now, but the 2026 proxy states it was raised from <strong>three times</strong> for 2023 and prior years, with a five-year phase-in. He also held 27,440 shares as of the 2024 proxy, being 22,524 held directly plus 4,916 in vested restricted share units. <span class="chip v">Verified</span></p>
     </div>
   </div>
 </section>
@@ -372,7 +382,7 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
 
   <div class="toc">
     <a href="#pp-facts">Publication</a><a href="#pp-levels">Point, application, system</a><a href="#pp-between">The Between Times</a>
-    <a href="#pp-glue">Glued vs oiled</a><a href="#pp-flint">The Great Decoupling</a><a href="#pp-blank">Discovery Canvas</a><a href="#pp-concepts">Concepts</a><a href="#pp-struct">Structure</a><a href="#pp-take">Takeaways</a>
+    <a href="#pp-glue">Glued vs oiled</a><a href="#pp-flint">The Great Decoupling</a><a href="#pp-blank">Discovery Canvas</a><a href="#pp-after">After the book</a><a href="#pp-concepts">Concepts</a><a href="#pp-struct">Structure</a><a href="#pp-take">Takeaways</a>
   </div>
 
   <div class="section" id="pp-facts">
@@ -451,7 +461,7 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
       </div>
       <div id="viz-glue"></div>
       <div class="detail" id="glue-detail"></div>
-      <p class="viz-note">Cases from the book: the age-based school curriculum as the glued system that blunts personalised-learning AI, and the roughly twelve companies that used rapid antigen testing to replace blanket COVID-19 distancing rules with information-based decisions, a protocol later adopted by more than 2,000 organisations.</p>
+      <p class="viz-note">Cases from the book: the age-based school curriculum as the glued system that blunts personalised-learning AI, and the roughly twelve companies that used rapid antigen testing to replace blanket COVID-19 distancing rules with information-based decisions, a protocol later adopted by more than 2,000 organisations. <strong>The COVID case is not a borrowed anecdote.</strong> He co-authored the peer-reviewed studies of that programme: <a href="https://agrawal.ca/journal-articles" target="_blank" rel="noopener">Science Advances</a>, February 2022, and <a href="https://agrawal.ca/journal-articles" target="_blank" rel="noopener">JAMA</a>, January 2022, with Gans, Goldfarb, CDL's Sonia Sennik, Janice Stein, and epidemiologist Laura Rosella. <span class="chip v">Verified</span></p>
     </div>
   </div>
 
@@ -492,8 +502,24 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
     </div>
   </div>
 
+  <div class="section" id="pp-after">
+    <h2><span class="sn">04.7</span>What came after the book</h2>
+    <p>Two things are worth knowing before you judge this book, and neither is in it.</p>
+    <div class="grid g2">
+      <div class="card">
+        <h4>The thesis went through peer review</h4>
+        <p style="margin-bottom:0"><strong>"Artificial Intelligence Adoption and System Change"</strong>, Journal of Economics and Management Strategy 33:327-337, 2024. What the trade book argues in narrative and parable, this states as economics. If you want to check whether the system-solutions argument survives contact with referees rather than with a general readership, this is where to look. The insurance walkthrough also got its own formal treatment in <strong>"Prediction machines, insurance, and protection"</strong>, Journal of the Japanese and International Economies, 2024.</p>
+      </div>
+      <div class="card">
+        <h4>They revised the concept the first book leaned on</h4>
+        <p style="margin-bottom:0"><strong>"The Economics of Bicycles for the Mind"</strong>, NBER Working Paper 34034, July 2025. Judgment, treated across both books as a single thing that complements prediction, is split in two: <em>opportunity</em> judgment, knowing when there is something worth acting on, and <em>payoff</em> judgment, knowing which action is worth taking. Their finding is that only opportunity judgment reliably complements cognitive tools. Payoff judgment does not necessarily. That is a real self-correction to the central claim of both trade books, and it is easy to miss because it is buried in a working paper.</p>
+      </div>
+    </div>
+    <p style="margin-top:16px">The Between Times analogy also got direct scholarly treatment in <strong>"Similarities and Differences in the Adoption of General Purpose Technologies"</strong> (Technology, Productivity, and Economic Growth, vol. 83, 2024), which is the place to go if the electrification comparison on this page interests you more than the parable does. See the <a href="#" data-goto="research">Research tab</a> for the full list.</p>
+  </div>
+
   <div class="section" id="pp-concepts">
-    <h2><span class="sn">04.7</span>The vocabulary</h2>
+    <h2><span class="sn">04.8</span>The vocabulary</h2>
     <div class="grid g2">
       <div class="card"><h4>Power</h4><p style="font-size:.9rem;margin-bottom:0">Used in the strict economic sense: you have power if what you own or control is scarce relative to demand. Not charisma, not hierarchy. System redesign changes what is scarce, which is why it moves power at the industry, company, and individual job level simultaneously.</p></div>
       <div class="card"><h4>There is no such thing as a machine decision</h4><p style="font-size:.9rem;margin-bottom:0">Machines do not have power because they do not decide. AI supplies a prediction; codified human judgment turns it into an action. What AI changes is <em>who</em> supplies the judgment and <em>when and where</em> the decision happens.</p></div>
@@ -507,12 +533,12 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
   </div>
 
   <div class="section" id="pp-struct">
-    <h2><span class="sn">04.8</span>Structure</h2>
+    <h2><span class="sn">04.9</span>Structure</h2>
     <div class="chaps" id="pp-chapters"></div>
   </div>
 
   <div class="section" id="pp-take">
-    <h2><span class="sn">04.9</span>What a leader is supposed to do with it</h2>
+    <h2><span class="sn">04.10</span>What a leader is supposed to do with it</h2>
     <div class="grid g2">
       <div class="card"><h4>For executives</h4>
         <ul class="bul" style="margin-bottom:0">
@@ -536,13 +562,13 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
 
 <!-- ============ 05 RESEARCH ============ -->
 <section class="panel" id="p-research" role="tabpanel" aria-labelledby="tab-research">
-  <p class="lede">Two distinct research careers. The first, roughly 2001 to 2015, is about how knowledge physically moves: out of universities, across cities, through the heads of people who change jobs. The second, from 2016, is the economics of AI. The books came out of the second, but the first is what got him tenure and most of his methodological credibility.</p>
+  <p class="lede">Two distinct research careers. The first, roughly 2001 to 2015, is about how knowledge physically moves: out of universities, across cities, through the heads of people who change jobs. The second, from 2016, is the economics of AI. The books came out of the second, but the first is what got him tenure and most of his methodological credibility. A third, smaller strand runs from 2022 to 2024: the COVID-19 workplace testing research, which is where one of the second book's set-piece examples actually comes from.</p>
 
   <div class="section" id="r-arc">
     <h2><span class="sn">05.1</span>Infographic: the research arc</h2>
     <div class="viz">
       <div class="viz-head"><h3>Two careers, one economist</h3><span class="viz-tag">Interactive</span></div>
-      <p class="viz-sub">Each dot is a significant paper, placed by year and coloured by research theme. Click any dot for the full citation.</p>
+      <p class="viz-sub">Each dot is a significant work, placed by year and coloured by research theme. Click any dot for the citation and why it matters. The dashed line marks 2016, where the machine-intelligence work starts.</p>
       <div class="ctrl">
         <div class="seg" id="arc-picker" role="group" aria-label="Theme filter">
           <button data-theme="all" aria-pressed="true">All themes</button>
@@ -550,17 +576,31 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
           <button data-theme="geography" aria-pressed="false">Geography &amp; mobility</button>
           <button data-theme="entre" aria-pressed="false">Entrepreneurship &amp; finance</button>
           <button data-theme="ai" aria-pressed="false">Economics of AI</button>
+          <button data-theme="covid" aria-pressed="false">COVID-19 field research</button>
         </div>
       </div>
       <div id="viz-arc"></div>
       <div class="detail" id="arc-detail"><h4>Select a paper</h4><p>Dots are positioned by publication year. Vertical position is theme only, and carries no magnitude.</p></div>
-      <p class="viz-note">Paper selection and years verified against publisher pages. The set shown is the top thirty by citation from the source dossier, not a complete bibliography. Full list at <a href="https://agrawal.ca/research" target="_blank" rel="noopener">agrawal.ca/research</a>.</p>
+      <p class="viz-note">Forty-one works, years verified against publisher pages. Not a complete bibliography. The dense cluster after 2022 and the fifth row, the COVID-19 field research, were both missing from the first version of this page and came out of a second research pass. Full list at <a href="https://agrawal.ca/research" target="_blank" rel="noopener">agrawal.ca/research</a> and <a href="https://agrawal.ca/journal-articles" target="_blank" rel="noopener">/journal-articles</a>.</p>
     </div>
   </div>
 
   <div class="section" id="r-top">
     <h2><span class="sn">05.2</span>Most cited work</h2>
-    <p><strong>A note on the numbers.</strong> Google Scholar blocks automated retrieval, so exact per-paper counts could not be pulled. Figures below are from Scholar snippets or Semantic Scholar, which systematically undercounts relative to Scholar, and are labelled accordingly. The ordering is approximate. His profile total is roughly <span class="num">28,270</span>; Wikipedia still carries an older figure of 16,457. His h-index and i10-index are not publicly retrievable without an authenticated session. <span class="chip u">Unverified</span></p>
+    <div class="card" style="margin-bottom:20px">
+      <h4>His h-index, which the dossier listed as not found <span class="chip v">Resolved</span></h4>
+      <p>Google Scholar blocks automated retrieval, which is why the source dossier could not get an h-index. Two open bibliometric databases do not block, and both hold a record for him that can be checked paper by paper. I scanned every title in each to confirm it is the right Ajay Agrawal, which matters here more than usual.</p>
+      <div class="tw" style="margin-bottom:14px"><table>
+        <thead><tr><th>Source</th><th>h-index</th><th>i10</th><th>Citations</th><th>Works</th><th>Record quality</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://www.semanticscholar.org/author/48054927" target="_blank" rel="noopener">Semantic Scholar</a></td><td class="num"><strong>37</strong></td><td class="num">n/a</td><td class="num">9,420</td><td class="num">79</td><td>Clean. All 79 titles checked, zero belonging to another Agrawal.</td></tr>
+          <tr><td><a href="https://openalex.org/A5109147283" target="_blank" rel="noopener">OpenAlex</a></td><td class="num"><strong>35</strong></td><td class="num">58</td><td class="num">8,129</td><td class="num">118</td><td>Near clean. One contaminated entry, a 2026 biofuel combustion paper belonging to the Alabama Ajay K. Agrawal.</td></tr>
+          <tr><td>Google Scholar</td><td class="num">blocked</td><td class="num">blocked</td><td class="num">~28,270</td><td class="num">n/a</td><td>Profile total only, via snippets. Wikipedia still carries an older 16,457.</td></tr>
+        </tbody>
+      </table></div>
+      <p style="margin-bottom:0"><strong>Do not average these.</strong> The gap between 9,420 and 28,270 is not error, it is coverage: Google Scholar counts books, book chapters, and working papers, and his single most-cited work is a trade book that the other two barely index. Take <strong>h = 35 to 37</strong> as the defensible range from sources that can be audited, and the Scholar total as a separate, higher, less checkable measure. A third Ajay Agrawal record on OpenAlex, with an h of 25, is contaminated with liposome and Leishmania pharmacology and should not be used at all.</p>
+    </div>
+    <p><strong>On the per-paper counts below.</strong> Exact Scholar figures still cannot be pulled, so the ordering is approximate and figures marked S2 come from Semantic Scholar, which undercounts relative to Scholar.</p>
     <div class="tw"><table>
       <thead><tr><th style="width:4%">#</th><th style="width:38%">Work</th><th style="width:22%">Venue</th><th style="width:8%">Year</th><th style="width:13%">Citations</th><th>Why it matters</th></tr></thead>
       <tbody>
@@ -578,8 +618,37 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
     </table></div>
   </div>
 
+  <div class="section" id="r-recent">
+    <h2><span class="sn">05.3</span>What he has published since the second book</h2>
+    <p>The source dossier stopped at 2022 and picked up again at one 2025 working paper. That left out the most active stretch of his AI work, including his highest-profile venue. It matters for reading the two books, because several of these are him answering the obvious objections to them.</p>
+    <div class="tw"><table>
+      <thead><tr><th style="width:30%">Work</th><th style="width:22%">Venue</th><th style="width:7%">Year</th><th>Why it matters here</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://www.science.org/doi/10.1126/science.adh9429" target="_blank" rel="noopener"><strong>Do we want less automation?</strong></a></td><td>Science 381(6654):155-158</td><td class="num">2023</td><td><strong>His highest-profile venue, and the site previously missed it.</strong> A direct answer to the augmentation-over-automation camp: the two are not opposites, since automating some tasks augments labour elsewhere. Goes further and argues AI automation could <em>reverse</em> rising inequality by letting lower-wage workers perform at levels that used to need years of education.</td></tr>
+        <tr><td><a href="https://hbr.org/2024/11/generative-ai-is-still-just-a-prediction-machine" target="_blank" rel="noopener"><strong>Generative AI Is Still Just a Prediction Machine</strong></a></td><td>Harvard Business Review</td><td class="num">2024</td><td>Their answer to the question this whole page raises: does a technology that writes and draws still fit a frame built on prediction? Their claim is yes, and that the binding constraints are unchanged, still data and judgment.</td></tr>
+        <tr><td>Artificial Intelligence Adoption and System Change</td><td>J. Economics &amp; Management Strategy 33:327-337</td><td class="num">2024</td><td>The peer-reviewed version of the Power and Prediction thesis. What the trade book argues as narrative, this states as economics.</td></tr>
+        <tr><td><a href="https://www.nber.org/papers/w31767" target="_blank" rel="noopener">The Turing Transformation: AI, Intelligence Augmentation, and Skill Premiums</a></td><td>Harvard Data Science Review (NBER w31767)</td><td class="num">2024</td><td>When AI compresses the skill premium and when it widens it. The formal companion to the Science piece.</td></tr>
+        <tr><td>Prediction machines, insurance, and protection</td><td>J. of the Japanese and International Economies</td><td class="num">2024</td><td>Formalises the insurance argument that the book's "blank slate" walkthrough reaches informally: an insurer that reduces risk rather than transferring it.</td></tr>
+        <tr><td>Similarities and Differences in the Adoption of General Purpose Technologies</td><td>Technology, Productivity, and Economic Growth, vol. 83</td><td class="num">2024</td><td>Direct scholarly work on the electrification analogy the Between Times chart is built on.</td></tr>
+        <tr><td><a href="https://www.nber.org/papers/w34034" target="_blank" rel="noopener">The Economics of Bicycles for the Mind</a></td><td>NBER Working Paper 34034</td><td class="num">2025</td><td>Splits judgment in two: <em>opportunity</em> judgment (knowing when to act) and <em>payoff</em> judgment (knowing which action). Finds opportunity judgment reliably complements cognitive tools while payoff judgment does not. A real refinement of what the first book treated as one undifferentiated thing.</td></tr>
+        <tr><td><a href="https://www.nber.org/papers/w34316" target="_blank" rel="noopener">Genius on Demand: The Value of Transformative AI</a></td><td>NBER Working Paper 34316</td><td class="num">2025</td><td>Separates routine knowledge workers from "genius" workers who generate novel insight, and asks what happens when genius is on tap. Routine workers face displacement if AI efficiency matches human genius.</td></tr>
+        <tr><td>Machine Intelligence and Human Judgment</td><td>IMF Finance &amp; Development</td><td class="num">2025</td><td>The argument restated for a policy audience.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="card" style="margin-top:16px">
+      <h4>A strand the dossier left out entirely: the COVID-19 field research</h4>
+      <p>Power and Prediction tells the rapid-antigen-testing story as an illustrative anecdote about "oiled" systems. It is not an anecdote he collected. <strong>He co-authored the peer-reviewed studies of that programme</strong>, with Gans, Goldfarb, CDL's Sonia Sennik, Janice Stein, and epidemiologist Laura Rosella.</p>
+      <ul class="bul" style="margin-bottom:0">
+        <li><strong>Science Advances</strong>, February 2022: "Large-scale implementation of rapid antigen testing system for COVID-19 in workplaces"</li>
+        <li><strong>JAMA</strong>, January 2022: "False-Positive Results in Rapid Antigen Tests for SARS-CoV-2"</li>
+        <li><strong>J. Occupational and Environmental Medicine</strong>, February 2024: "Examining the Relationship Between Workplace Industry and COVID-19 Infection"</li>
+      </ul>
+    </div>
+    <p style="margin-top:14px"><strong>One attribution trap, flagged so it does not get repeated.</strong> <a href="https://www.nber.org/papers/w34639" target="_blank" rel="noopener">O-Ring Automation</a> (NBER w34639, January 2026) appears alongside this work and is <strong>not</strong> his. It is Gans and Goldfarb only. <span class="chip d">Not his</span></p>
+  </div>
+
   <div class="section" id="r-next">
-    <h2><span class="sn">05.3</span>The next twenty</h2>
+    <h2><span class="sn">05.4</span>The earlier record</h2>
     <p>Venues and years verified; exact Scholar counts unavailable, so ordering is approximate.</p>
     <div class="grid g2">
       <div class="card"><h4>Economics of AI</h4><ul class="clean" style="font-size:.86rem">
@@ -614,7 +683,7 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
   </div>
 
   <div class="section" id="r-books">
-    <h2><span class="sn">05.4</span>Complete book list</h2>
+    <h2><span class="sn">05.5</span>Complete book list</h2>
     <p>Six books. Three are the trade trilogy with Gans and Goldfarb; three are edited academic volumes coming out of the NBER conference series. Several entries in the source dossier were listed as unverified or forthcoming and have been confirmed or corrected here.</p>
     <div class="tw"><table>
       <thead><tr><th style="width:27%">Title</th><th style="width:26%">Authors or editors</th><th style="width:17%">Publisher</th><th style="width:9%">Year</th><th style="width:15%">ISBN</th><th>Status</th></tr></thead>
@@ -751,11 +820,31 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
       <div class="card"><h4>5. No macroeconomics</h4><p style="font-size:.9rem;margin-bottom:0">The book works at the level of the firm and the task. It has nothing to say about aggregate demand, the distribution of returns to capital, or the possibility of long-run immiseration.</p></div>
       <div class="card"><h4>6. State control is underplayed</h4><p style="font-size:.9rem;margin-bottom:0">His sharpest move is to reframe the book against itself: read properly, he says, it is actually a terrifying book, about surveillance and behavioural manipulation, that does not know it.</p></div>
     </div>
-    <p style="margin-top:16px"><strong>Why this critique lands.</strong> Objections 1, 2, and 3 are about scope, and the authors would likely accept them as the price of a deliberately simple frame. Objections 5 and 6 are different in kind. They say the frame is not merely narrow but systematically excludes the effects most likely to matter, and that the exclusions run in one direction: toward optimism. Notably, <em>Power and Prediction</em> answers none of these directly. It moves to system design and power inside industries, which is a step toward objection 6 without engaging it.</p>
+    <p style="margin-top:16px"><strong>Why this critique lands.</strong> Objections 1, 2, and 3 are about scope, and the authors would likely accept them as the price of a deliberately simple frame. Objections 5 and 6 are different in kind. They say the frame is not merely narrow but systematically excludes the effects most likely to matter, and that the exclusions run in one direction: toward optimism. <em>Power and Prediction</em> does not answer them: it moves to system design and power inside industries, which is a step toward objection 6 without engaging it. <strong>But the books are not the whole record, and the later papers do answer some of this.</strong> See below.</p>
+  </div>
+
+  <div class="section" id="rc-answers">
+    <h2><span class="sn">07.3</span>How they answered, after the books</h2>
+    <p>Judging the argument on the two trade books alone is unfair to it, and it is the mistake this page originally made. Between 2023 and 2025 the three authors published direct responses to the two hardest questions put to them. Neither response is in either book.</p>
+    <div class="grid g2">
+      <div class="card">
+        <h4>On jobs and inequality, answering Kotlikoff's objection 4</h4>
+        <p><a href="https://www.science.org/doi/10.1126/science.adh9429" target="_blank" rel="noopener"><strong>"Do we want less automation?"</strong></a>, <em>Science</em> 381(6654):155-158, 2023.</p>
+        <p>This is not a hedge. They argue that automation and augmentation are not opposites, because automating some tasks augments labour elsewhere, so steering AI research away from automation is built on a false dichotomy. Then the stronger claim: AI automation may be a route to <em>reversing</em> rising inequality, by letting lower-wage workers perform at levels that previously took years of education and experience to reach.</p>
+        <p style="margin-bottom:0">Whether or not it is right, it is a falsifiable position published in a top venue, and it is the opposite of the "what, me, worry?" complacency Kotlikoff described. The honest verdict is that objection 4 was fair against the 2018 book and has since been answered; objections 5 and 6, on macroeconomics and state control, still stand unanswered.</p>
+      </div>
+      <div class="card">
+        <h4>On generative AI, answering the obvious objection</h4>
+        <p><a href="https://hbr.org/2024/11/generative-ai-is-still-just-a-prediction-machine" target="_blank" rel="noopener"><strong>"Generative AI Is Still Just a Prediction Machine"</strong></a>, <em>Harvard Business Review</em>, 18 November 2024. Preceded by <a href="https://agrawal.ca/journal-articles" target="_blank" rel="noopener">"How Large Language Models Reflect Human Judgment"</a>, HBR, June 2023.</p>
+        <p>The title is the argument. A model that writes and draws is still, mechanically, a prediction engine running on computational statistics and large amounts of data, so the frame holds and the binding constraints are unchanged: access to relevant data, and human judgment about what the output is worth.</p>
+        <p style="margin-bottom:0">The fair reading is that this is a real answer rather than a dodge, and also that it is the answer the frame was always going to produce. A theory that classifies every new capability as more prediction is hard to catch out, which is the same structural point as the Between Times critique on the previous tab.</p>
+      </div>
+    </div>
+    <p style="margin-top:16px">There is also a quieter kind of answer. <strong>"Artificial Intelligence Adoption and System Change"</strong> (Journal of Economics and Management Strategy, 2024) puts the <em>Power and Prediction</em> thesis through peer review, and <strong>"The Economics of Bicycles for the Mind"</strong> (NBER, 2025) splits judgment into opportunity judgment and payoff judgment, finding only the first reliably complements cognitive tools. That is a genuine self-correction: the first book treated judgment as one thing, and it turns out not to be.</p>
   </div>
 
   <div class="section" id="rc-reader">
-    <h2><span class="sn">07.3</span>Reader-level criticism</h2>
+    <h2><span class="sn">07.4</span>Reader-level criticism</h2>
     <div class="grid g2">
       <div class="card"><h4>Prediction Machines</h4><p style="font-size:.9rem;margin-bottom:0">Repetitive, and thin on technical depth. Both are fair and largely deliberate: it is a non-technical book that restates one idea in many settings.</p></div>
       <div class="card"><h4>Power and Prediction</h4><p style="font-size:.9rem;margin-bottom:0">Repetitive toward the end. Focused on large enterprises rather than small and mid-size firms, which is a real gap given that the adoption data shows firm size is the strongest predictor of AI use. Light on ethical risk, and silent on the disruption of creative industries, which aged poorly given what happened after November 2022.</p></div>
@@ -763,12 +852,12 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
   </div>
 
   <div class="section" id="rc-honest">
-    <h2><span class="sn">07.4</span>Where the argument is most exposed</h2>
+    <h2><span class="sn">07.5</span>Where the argument is most exposed</h2>
     <p>Three observations that follow from the material on this page rather than from any named reviewer. Flagged as such.</p>
     <ul class="bul">
       <li><strong>The ship-then-shop example never materialised.</strong> Eight years after the thought experiment, anticipatory shipping remains a patent rather than a business model. The second book concedes the example needed a system solution, which converts a prediction about Amazon into a restatement of the new framework. That is a defensible move, but it is not a confirmed forecast. <span class="chip u">Inference</span></li>
       <li><strong>The electrification analogy is load-bearing and unfalsifiable in the short run.</strong> If AI transforms industries, the Between Times framework predicted it. If it does not, the framework says we are still in the Between Times. The analogy is genuinely illuminating and it also cannot lose, which is worth holding in mind. <span class="chip u">Inference</span></li>
-      <li><strong>Generative AI arrived between the two books.</strong> ChatGPT launched two weeks after <em>Power and Prediction</em> published. The prediction frame accommodates it, since next-token prediction is literally prediction, but the most visible consequences since have been in generation, creative work, and interface rather than in the decision-system redesign the book is about. <span class="chip u">Inference</span></li>
+      <li><strong>Generative AI arrived between the two books.</strong> ChatGPT launched two weeks after <em>Power and Prediction</em> published. An earlier version of this page left the objection there. That was incomplete: the authors answered it directly in <a href="https://hbr.org/2024/11/generative-ai-is-still-just-a-prediction-machine" target="_blank" rel="noopener">HBR in November 2024</a>, arguing generative models are prediction engines too and the binding complements are unchanged. What survives of the objection is narrower and harder for them: the visible consequences so far have landed in generation, creative work, and interface rather than in the decision-system redesign the second book is about, and a frame that absorbs every new capability as "more prediction" is difficult to falsify. <span class="chip u">Inference</span> <span class="chip v">Their answer cited</span></li>
     </ul>
   </div>
 </section>
@@ -781,7 +870,7 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
     <h2><span class="sn">08.1</span>Method and limits</h2>
     <div class="grid g2">
       <div class="card"><h4>What this page is</h4><p style="font-size:.9rem;margin-bottom:0">A presentation layer over two research dossiers, one on Agrawal and one comparing his two trade books, both kept verbatim in this repository under <code>research/</code>. Where the dossiers flagged something as unverified or missing, that flag is carried through to the page rather than smoothed away.</p></div>
-      <div class="card"><h4>What changed during the build</h4><p style="font-size:.9rem;margin-bottom:0">Eight items were resolved, updated, or corrected against primary sources: the Power and Prediction ISBN, the Health Care Challenges volume, the Transformative AI editors (a correction), the Bayesian Entrepreneurship details, CDL's current scale figures, one new 2025 NBER working paper, two real adoption data series for the Between Times chart, and three dead links in the source dossier. Every external link on this page was checked to resolve at build time.</p></div>
+      <div class="card"><h4>What changed during the build</h4><p style="font-size:.9rem;margin-bottom:0">Sixteen items were resolved, updated, or corrected against primary sources across two passes. The largest were the h-index (previously not found), the full 2004 to 2025 salary series and its unresolved year, Genpact director pay (previously not found), nine works published since 2022 that the dossier omitted including a <em>Science</em> paper, and the COVID-19 research strand. Every external link was checked to resolve.</p></div>
     </div>
     <div class="card" style="margin-top:16px">
       <h4>Three links in the source dossier are dead</h4>
@@ -791,7 +880,7 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
         <li>The HBR thought-experiment article was cited with the wrong month. It is <a href="https://hbr.org/2017/10/how-ai-will-change-strategy-a-thought-experiment" target="_blank" rel="noopener">October 2017</a>, not September.</li>
       </ul>
     </div>
-    <p style="margin-top:16px"><strong>Known limits.</strong> Google Scholar blocks automated retrieval, so the h-index, i10-index, and most per-paper citation counts are unavailable and the ordering in the Research tab is approximate. Figures labelled S2 come from Semantic Scholar and systematically undercount relative to Scholar. The MBA institution and the MEng are genuinely inconsistent across otherwise reliable sources and are presented unresolved. CDL's equity and site figures are self-reported and grow every year. Bresnahan's academic review of the second book is paywalled and was not read.</p>
+    <p style="margin-top:16px"><strong>Known limits.</strong> Google Scholar still blocks automated retrieval, so its own h-index and most per-paper counts are unavailable and the ordering in the Research tab is approximate; the h-index shown comes from Semantic Scholar and OpenAlex instead, whose coverage is narrower. Figures labelled S2 come from Semantic Scholar and systematically undercount relative to Scholar. The MBA institution and the MEng are genuinely inconsistent across otherwise reliable sources and are presented unresolved. CDL's equity and site figures are self-reported and grow every year. Bresnahan's academic review of the second book is paywalled and was not read.</p>
   </div>
 
   <div class="section" id="sr-primary">
@@ -830,8 +919,22 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
     </div>
   </div>
 
+  <div class="section" id="sr-added">
+    <h2><span class="sn">08.5</span>Added in the second research pass</h2>
+    <p>Sources consulted after the site first went live, when it was re-examined for gaps. These produced the h-index, the full salary series, the Genpact figures, and the post-2022 publication record.</p>
+    <div class="srcgrid">
+      <div class="srcitem"><span class="st">Bibliometrics, open and auditable</span><span class="su"><a href="https://www.semanticscholar.org/author/48054927" target="_blank" rel="noopener">Semantic Scholar author 48054927</a> (h=37, 79 papers, verified clean) · <a href="https://openalex.org/A5109147283" target="_blank" rel="noopener">OpenAlex A5109147283</a> (h=35, i10=58, one contaminated entry) <span class="chip n">New</span></span></div>
+      <div class="srcitem"><span class="st">Do we want less automation?</span><span class="su"><a href="https://www.science.org/doi/10.1126/science.adh9429" target="_blank" rel="noopener">Science 381(6654):155-158, 2023, DOI 10.1126/science.adh9429</a> <span class="chip n">New</span></span></div>
+      <div class="srcitem"><span class="st">Generative AI Is Still Just a Prediction Machine</span><span class="su"><a href="https://hbr.org/2024/11/generative-ai-is-still-just-a-prediction-machine" target="_blank" rel="noopener">Harvard Business Review, 18 November 2024</a> <span class="chip n">New</span></span></div>
+      <div class="srcitem"><span class="st">His own publication index</span><span class="su"><a href="https://agrawal.ca/journal-articles" target="_blank" rel="noopener">agrawal.ca/journal-articles</a> · <a href="https://www.avigoldfarb.com/artificial-intelligence-1" target="_blank" rel="noopener">Goldfarb's AI index</a>, which is where the co-authorship on each recent paper was checked <span class="chip n">New</span></span></div>
+      <div class="srcitem"><span class="st">Recent NBER working papers</span><span class="su"><a href="https://www.nber.org/papers/w34034" target="_blank" rel="noopener">w34034 Bicycles for the Mind</a> · <a href="https://www.nber.org/papers/w31767" target="_blank" rel="noopener">w31767 The Turing Transformation</a> · <a href="https://www.nber.org/papers/w34639" target="_blank" rel="noopener">w34639 O-Ring Automation</a>, checked and found to be Gans and Goldfarb only <span class="chip n">New</span></span></div>
+      <div class="srcitem"><span class="st">Genpact director compensation, read from the filings</span><span class="su"><a href="https://www.sec.gov/Archives/edgar/data/1398659/000114036124014255/ny20016756x2_def14a.htm" target="_blank" rel="noopener">2024 DEF 14A</a> (FY2023 table) · <a href="https://www.sec.gov/Archives/edgar/data/1398659/000114036126008973/ny20066229x771_def14a.htm" target="_blank" rel="noopener">2026 DEF 14A</a> (FY2025 table and the ownership guideline change) <span class="chip n">New</span></span></div>
+      <div class="srcitem"><span class="st">Full Ontario salary history, 2004 to 2025</span><span class="su"><a href="https://www.ontariosunshinelist.com/people/ajay-agrawal/university-of-toronto" target="_blank" rel="noopener">ontariosunshinelist.com</a>, which carries the per-year series and the percentile rankings <span class="chip n">New</span></span></div>
+    </div>
+  </div>
+
   <div class="section" id="sr-other">
-    <h2><span class="sn">08.5</span>Reviews, profiles, and secondary</h2>
+    <h2><span class="sn">08.6</span>Reviews, profiles, and secondary</h2>
     <div class="srcgrid">
       <div class="srcitem"><span class="st">Kotlikoff review, Journal of Economic Literature</span><span class="su"><a href="https://doi.org/10.1257/jel.20191519" target="_blank" rel="noopener">doi.org/10.1257/jel.20191519</a> · JEL 60(3), Sept 2022, 1052 to 1057</span></div>
       <div class="srcitem"><span class="st">TechTalks review of Power and Prediction</span><span class="su"><a href="https://bdtechtalks.com/2022/12/27/power-and-prediction-review/" target="_blank" rel="noopener">bdtechtalks.com</a></span></div>

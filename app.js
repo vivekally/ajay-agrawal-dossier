@@ -74,11 +74,31 @@
   }
 
   /* ---------------- 01.4 Salary chart ---------------- */
+  /* Full disclosed history, 2004 to 2025. Figures carrying cents come from the per-year
+     Sunshine List records; the rest are as the aggregator rounds them. */
   var SALARY = [
-    { y: "2014", v: 316029.54, b: 1366.00 }, { y: "2015", v: 322544.52, b: 0 },
-    { y: "2016", v: 401553.48, b: 1631.92 }, { y: "2017", v: 427093.98, b: 988.52 },
-    { y: "2018", v: 433188.42, b: 1061.48 }, { y: "2019", v: 419279.46, b: 180.26 },
-    { y: "2020", v: 424182.96, b: 151.08 }, { y: "recent", v: 492964.94, b: null, q: true }
+    { y: "2004", v: 162581, b: null, n: "First year he appears on the list, his second year at Rotman." },
+    { y: "2005", v: 166832, b: null },
+    { y: "2006", v: 178788, b: null },
+    { y: "2007", v: 200023, b: null },
+    { y: "2008", v: 221418, b: null },
+    { y: "2009", v: 264503, b: null },
+    { y: "2010", v: 315464, b: null, n: "Crosses $300K. The same year he co-founds The Next 36." },
+    { y: "2011", v: 311042, b: null },
+    { y: "2012", v: 296031, b: null, n: "The only sustained dip in the series, and the year he founds the Creative Destruction Lab." },
+    { y: "2013", v: 307239, b: null },
+    { y: "2014", v: 316029.54, b: 1366.00 },
+    { y: "2015", v: 322544.52, b: 0 },
+    { y: "2016", v: 401553.48, b: 1631.92, n: "A 24% jump, the largest in the series. The same year The Simple Economics of Machine Intelligence runs in HBR, the article that became Prediction Machines." },
+    { y: "2017", v: 427093.98, b: 988.52 },
+    { y: "2018", v: 433188.42, b: 1061.48, n: "Prediction Machines publishes in April." },
+    { y: "2019", v: 419279.46, b: 180.26 },
+    { y: "2020", v: 424182.96, b: 151.08 },
+    { y: "2021", v: 447473, b: null },
+    { y: "2022", v: 463492, b: null, n: "Order of Canada, and Power and Prediction publishes in November." },
+    { y: "2023", v: 473396, b: null },
+    { y: "2024", v: 492964.94, b: null, n: "This is the figure the source dossier carried with no year attached. It is 2024." },
+    { y: "2025", v: 537683, b: null, cur: true, n: "A 9.1% raise, his largest since 2016. Ranks 109th out of 404,915 people on the entire Ontario list, and 17th of 7,392 at the University of Toronto." }
   ];
   function money(n) { return "$" + n.toLocaleString("en-CA", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   (function salary() {
@@ -86,7 +106,7 @@
     var cur = 7;
     function draw() {
     var W = 760, H = 260, pad = { t: 14, r: 12, b: 34, l: 56 };
-    var max = 520000, iw = W - pad.l - pad.r, ih = H - pad.t - pad.b;
+    var max = 560000, iw = W - pad.l - pad.r, ih = H - pad.t - pad.b;
     var bw = iw / SALARY.length, s = "";
     [0, 100000, 200000, 300000, 400000, 500000].forEach(function (g) {
       var y = pad.t + ih - (g / max) * ih;
@@ -96,8 +116,10 @@
     SALARY.forEach(function (d, i) {
       var h = (d.v / max) * ih, x = pad.l + i * bw + bw * 0.16, y = pad.t + ih - h, w = bw * 0.68;
       s += '<rect class="hot sal-bar" data-i="' + i + '" x="' + x + '" y="' + y + '" width="' + w + '" height="' + h +
-        '" rx="2" fill="' + (d.q ? C.brass : C.pm) + '" opacity="' + (d.q ? ".55" : ".88") + '"/>';
-      s += '<text class="lab-s" x="' + (x + w / 2) + '" y="' + (H - 12) + '" text-anchor="middle">' + d.y + '</text>';
+        '" rx="2" fill="' + (d.cur ? C.ok : C.pm) + '" opacity="' + (d.cur ? ".92" : ".8") + '"/>';
+      if (i % 2 === 0 || d.cur) {
+        s += '<text class="lab-s" x="' + (x + w / 2) + '" y="' + (H - 12) + '" text-anchor="middle">' + d.y + '</text>';
+      }
     });
     s += '<line class="axis" x1="' + pad.l + '" y1="' + (pad.t + ih) + '" x2="' + (W - pad.r) + '" y2="' + (pad.t + ih) + '"/>';
     host.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Salary by year">' + s + '</svg>';
@@ -106,17 +128,17 @@
     function pick(i) {
       cur = i;
       var d = SALARY[i];
-      $$(".sal-bar", host).forEach(function (r, j) { r.setAttribute("opacity", j === i ? "1" : (SALARY[j].q ? ".4" : ".55")); });
-      det.innerHTML = '<h4>' + (d.q ? "Most recent disclosure, year unstated" : d.y) + '</h4>' +
+      $$(".sal-bar", host).forEach(function (r, j) { r.setAttribute("opacity", j === i ? "1" : ".5"); });
+      det.innerHTML = '<h4>' + d.y + (d.cur ? " &middot; most recent disclosure" : "") + '</h4>' +
         '<p><span class="num" style="font-size:1.25rem;font-weight:600;color:var(--accent)">' + money(d.v) + '</span></p>' +
-        '<p>' + (d.b === null ? "Taxable benefits not captured for this record."
-          : "Taxable benefits: <span class=\"num\">" + money(d.b) + "</span>.") +
-        (d.q ? " This figure appears on opengovca.com without a stated disclosure year, so it is plotted last rather than at a known position. Confirm against the official ontario.ca dataset before citing."
-             : " Disclosed under the title Professor of Strategic Management, University of Toronto.") + '</p>' +
+        '<p>' + (d.b === null ? "" : "Taxable benefits: <span class=\"num\">" + money(d.b) + "</span>. ") +
+        "Disclosed under the title Professor of Strategic Management, University of Toronto." +
+        (d.n ? " " + d.n : "") + '</p>' +
         '<span class="who">Ontario Public Sector Salary Disclosure</span>';
     }
     host.addEventListener("click", function (e) { var r = e.target.closest(".sal-bar"); if (r) pick(+r.dataset.i); });
     host.addEventListener("mouseover", function (e) { var r = e.target.closest(".sal-bar"); if (r) pick(+r.dataset.i); });
+    cur = SALARY.length - 1;
     draw();
     REDRAW.push(draw);
   })();
@@ -622,8 +644,10 @@
     knowledge: { n: "Knowledge transfer", ck: "pm", row: 0 },
     geography: { n: "Geography & mobility", ck: "ok", row: 1 },
     entre: { n: "Entrepreneurship & finance", ck: "brass", row: 2 },
-    ai: { n: "Economics of AI", ck: "pp", row: 3 }
+    ai: { n: "Economics of AI", ck: "pp", row: 3 },
+    covid: { n: "COVID-19 field research", ck: "soft", row: 4 }
   };
+  var THEME_ROWS = 5;
   var PAPERS = [
     { y: 2001, th: "knowledge", t: "University-to-industry knowledge transfer: literature review and unanswered questions", v: "Int. J. Management Reviews 3(4)", n: "Framed the research agenda for the whole field." },
     { y: 2002, th: "knowledge", t: "Putting Patents in Context: Exploring Knowledge Transfer from MIT", v: "Management Science 48(1), with Rebecca Henderson", n: "The landmark result: patents capture only about 6 to 10% of knowledge transferred out of a university. Most of it moves through people." },
@@ -655,17 +679,27 @@
     { y: 2020, th: "entre", t: "Tax Credits and Small Firm R&D Spending", v: "AEJ: Economic Policy 12(2)", n: "" },
     { y: 2021, th: "entre", t: "Enabling Entrepreneurial Choice", v: "Management Science 67(9), with Gans and Scott Stern", n: "The theoretical root of what later became the Bayesian Entrepreneurship volume." },
     { y: 2022, th: "ai", t: "Power and Prediction (book)", v: "Harvard Business Review Press", n: "The sequel, arguing that the bottleneck is system redesign rather than technology." },
-    { y: 2025, th: "ai", t: "Genius on Demand: The Value of Transformative AI", v: "NBER Working Paper 34316", n: "Distinguishes routine knowledge workers from 'genius' workers who generate novel insight, and asks what happens when genius itself is on tap. Routine workers face displacement if AI efficiency matches human genius." }
+    { y: 2022, th: "covid", t: "Large-scale implementation of rapid antigen testing for COVID-19 in workplaces", v: "Science Advances, with Rosella, Gans, Goldfarb, Sennik, Stein", n: "The peer-reviewed study of the rapid-testing consortium that Power and Prediction uses as its 'oiled system' example. The book tells it as an anecdote; this is the underlying research, and he is an author on it." },
+    { y: 2022, th: "covid", t: "False-Positive Results in Rapid Antigen Tests for SARS-CoV-2", v: "JAMA, with Gans, Goldfarb, Sennik, Stein, Rosella", n: "The measurement problem behind the same programme: how often the test says yes when the answer is no." },
+    { y: 2023, th: "ai", t: "Do we want less automation?", v: "Science 381(6654):155-158", n: "His highest-profile venue, and his most direct answer to the critics. Argues automation and augmentation are not opposites: automating some tasks augments labour elsewhere. Goes further and argues AI automation could REVERSE rising inequality, by letting lower-wage workers perform at levels that used to require years of education." },
+    { y: 2023, th: "ai", t: "How Large Language Models Reflect Human Judgment", v: "Harvard Business Review, June 2023", n: "The first published attempt to fit generative AI into the prediction frame, six months after ChatGPT." },
+    { y: 2024, th: "ai", t: "Artificial Intelligence Adoption and System Change", v: "J. Economics & Management Strategy 33:327-337", n: "The peer-reviewed version of the Power and Prediction thesis. What the trade book argues in narrative, this states as economics." },
+    { y: 2024, th: "ai", t: "The Turing Transformation: AI, Intelligence Augmentation, and Skill Premiums", v: "Harvard Data Science Review, Special Issue 5 (NBER w31767)", n: "When does AI compress the skill premium and when does it widen it? The formal companion to the Science piece." },
+    { y: 2024, th: "ai", t: "Prediction machines, insurance, and protection", v: "J. of the Japanese and International Economies", n: "Formalises the insurance argument that the Power and Prediction 'blank slate' walkthrough reaches informally: an insurer that reduces risk rather than transferring it." },
+    { y: 2024, th: "ai", t: "Generative AI Is Still Just a Prediction Machine", v: "Harvard Business Review, 18 November 2024", n: "The authors' direct answer to the obvious objection. Their claim: generative models are prediction engines too, and the binding constraints remain the same two complements, relevant data and business judgment." },
+    { y: 2024, th: "covid", t: "Examining the Relationship Between Workplace Industry and COVID-19 Infection", v: "J. Occupational and Environmental Medicine", n: "" },
+    { y: 2025, th: "ai", t: "The Economics of Bicycles for the Mind", v: "NBER Working Paper 34034, July 2025", n: "Splits judgment in two: opportunity judgment (knowing when to act) and payoff judgment (knowing which action). Finds opportunity judgment reliably complements cognitive tools while payoff judgment does not. A real refinement of the concept the first book treated as one thing." },
+    { y: 2025, th: "ai", t: "Genius on Demand: The Value of Transformative AI", v: "NBER Working Paper 34316, October 2025", n: "Distinguishes routine knowledge workers from 'genius' workers who generate novel insight, and asks what happens when genius itself is on tap. Routine workers face displacement if AI efficiency matches human genius." }
   ];
   (function arc() {
     var host = $("#viz-arc"), det = $("#arc-detail"); if (!host) return;
     var filter = "all";
-    var W = 760, H = 250, pad = { l: 40, r: 24, t: 24, b: 40 };
+    var W = 760, H = 300, pad = { l: 40, r: 24, t: 24, b: 40 };
     var Y0 = 2000, Y1 = 2026;
     function render() {
       var iw = W - pad.l - pad.r, ih = H - pad.t - pad.b, s = "";
       var X = function (y) { return pad.l + ((y - Y0) / (Y1 - Y0)) * iw; };
-      var ROWY = function (r) { return pad.t + 16 + r * ((ih - 30) / 3); };
+      var ROWY = function (r) { return pad.t + 16 + r * ((ih - 30) / (THEME_ROWS - 1)); };
       Object.keys(THEMES).forEach(function (k) {
         var th = THEMES[k], on = (filter === "all" || filter === k);
         s += '<line x1="' + pad.l + '" y1="' + ROWY(th.row) + '" x2="' + (W - pad.r) + '" y2="' + ROWY(th.row) +
