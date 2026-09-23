@@ -1,0 +1,9 @@
+{
+  "name": "ajay-agrawal-dossier",
+  "private": true,
+  "type": "module",
+  "description": "Static research dossier. type:module is for node --test only; the site itself has no build step.",
+  "scripts": {
+    "test": "node --test"
+  }
+}
