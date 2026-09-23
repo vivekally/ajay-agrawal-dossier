@@ -6,7 +6,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   prepareRound, buildSession, bestReferrals, sessionValue, expectedReviewGain,
-  round3Decompose, mulberry32, threshold
+  round3Decompose, mulberry32, threshold, parSearch, roundValue, bestAction
 } from '../engine.js';
 import { facts, buildRound, segments, LOOP_COST, SHIFT } from '../scenarios/lending.js';
 
@@ -100,23 +100,72 @@ test('a review is only ever worth a non-negative amount, judged on what the play
   }
 });
 
-/* ---------------------------------------------------------------------------
- * L10, the book's CENTRAL claim, is NOT yet demonstrated by this scenario.
+/* L10: the book's central claim, and the hardest invariant here.
  *
- * Measured three ways, judgment's influence does not rise monotonically across the rounds:
- *   judgment error at the default sliders : 1.31 -> 3.10 -> 2.90
- *   spread over the full slider grid      : 13.92 -> 5.56 -> 6.34
- *   spread over the spec's +/-50% grid    : 4.20 -> 3.58 -> 4.83
+ * It failed on the first attempt, three different ways, and the cause was structural rather than a
+ * matter of tuning. With a FIXED pool of applicants, a segment with no prediction gets one bulk
+ * action, so moving a slider flips every applicant in it at once; cheap prediction then moves
+ * judgment to the margin and SHRINKS its influence. Gentle price tiers smoothed it further.
  *
- * The mechanism, found numerically: with a FIXED pool of applicants, a segment with no prediction
- * gets one bulk action, so a slider change flips eight applicants at once. Cheap prediction moves
- * judgment to the margin, which lowers the spread. Round 2's price tiers lower it further, because
- * a weight change shifts a tier instead of flipping approve to decline.
- *
- * So the claim needs the number of LIVE DECISIONS to grow as prediction gets cheaper, which is what
- * the book actually argues (cheap prediction is used in places it was not worth using before).
- * The fix is scenario design, not tuning: segments that cannot be served at all without a
- * prediction, so the count of decisions needing judgment goes 1 -> 2 -> 4 across the rounds, and
- * base rates robust across the whole grid so unpredicted segments never flip in bulk.
- * ------------------------------------------------------------------------- */
-test('L10 judgment matters more as prediction gets cheaper', { todo: 'needs scenario redesign: decision count must grow with cheaper prediction' }, () => {});
+ * The scenario now does what the book actually describes: cheap prediction gets used in places it
+ * was not worth using before, so the number of live decisions grows (purchases 1 -> 3 -> 4,
+ * predicted exposure about 9 -> 15.9 -> 29.9), and judgment's influence grows with it.
+ */
+test('L10 judgment matters more as prediction gets cheaper', () => {
+  const grid = [];
+  for (const loss of [0.75, 1.5, 2.25]) for (const firstTime of [1.5, 3, 4.5]) grid.push({ loss, firstTime });
+  const spread = a => Math.max(...a) - Math.min(...a);
+
+  const flatRound = id => {
+    const round = prepareRound(buildRound(id));
+    const bought = parSearch({ round, facts }).bought;
+    return spread(grid.map(w => roundValue({ round, facts, weights: w, bought }).total));
+  };
+  const r3Spread = spread(grid.map(w => {
+    const out = [];
+    for (let seed = 1; seed <= 12; seed++) {
+      const round = prepareRound(buildRound('r3', { loop: true }));
+      const session = buildSession({ round, seed });
+      const referred = bestReferrals({ session, facts, weights: w, hours: HOURS }).referred;
+      out.push(sessionValue({ session, facts, weights: w, referred, loopCost: LOOP_COST }));
+    }
+    return mean(out);
+  }));
+
+  const [s1, s2, s3] = [flatRound('r1'), flatRound('r2'), r3Spread];
+  assert.ok(s1 < s2, `round 1 ${s1.toFixed(2)} must matter less than round 2 ${s2.toFixed(2)}`);
+  assert.ok(s2 < s3, `round 2 ${s2.toFixed(2)} must matter less than round 3 ${s3.toFixed(2)}`);
+});
+
+test('L10 mechanism: the number of live decisions grows as prediction gets cheaper', () => {
+  const exposure = id => {
+    const round = prepareRound(buildRound(id, { loop: true }));
+    const bought = round.free
+      ? new Set(round.segments.map(s => s.key))
+      : parSearch({ round, facts }).bought;
+    return {
+      segments: bought.size,
+      weighted: round.segments.filter(s => bought.has(s.key)).reduce((t, s) => t + s.n * s.size, 0)
+    };
+  };
+  const [e1, e2, e3] = ['r1', 'r2', 'r3'].map(exposure);
+  assert.ok(e1.segments < e2.segments && e2.segments < e3.segments,
+    `segments under prediction must grow: ${e1.segments} -> ${e2.segments} -> ${e3.segments}`);
+  assert.ok(e1.weighted < e2.weighted && e2.weighted < e3.weighted,
+    `predicted exposure must grow: ${e1.weighted.toFixed(1)} -> ${e2.weighted.toFixed(1)} -> ${e3.weighted.toFixed(1)}`);
+});
+
+test('an unpredicted segment gives the same bulk call to every reasonable weight setting', () => {
+  // This is what stops judgment from looking MORE influential in the early rounds than the late
+  // ones: without it, one slider nudge flips a whole segment and the book's claim inverts.
+  const round = prepareRound(buildRound('r2'));
+  const bought = parSearch({ round, facts }).bought;
+  for (const seg of round.segments) {
+    if (bought.has(seg.key)) continue;
+    const calls = new Set();
+    for (const loss of [0.75, 1.5, 2.25]) for (const firstTime of [1.5, 3, 4.5]) {
+      calls.add(bestAction(seg.prior.mean, seg, facts, { loss, firstTime }, round.tiers));
+    }
+    assert.equal(calls.size, 1, `${seg.key} flips in bulk across the slider grid: ${[...calls].join('/')}`);
+  }
+});

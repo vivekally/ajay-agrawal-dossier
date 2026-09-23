@@ -21,9 +21,12 @@ import { makePrior } from '../engine.js';
 export const facts = {
   L: 30,                                   // points lost when a loan defaults
   tiers: {
+    // Acceptance falls steeply with the rate, so choosing the wrong tier costs real money. A
+    // gentler spread let a weight change shift a tier instead of flipping approve to decline,
+    // which SMOOTHED judgment's influence away in round 2 and broke invariant L10.
     low:      { m: 2.0, a: 0.98, label: 'Low rate' },
-    standard: { m: 3.0, a: 0.90, label: 'Standard rate' },
-    high:     { m: 4.5, a: 0.62, label: 'High rate' }
+    standard: { m: 3.0, a: 0.88, label: 'Standard rate' },
+    high:     { m: 5.0, a: 0.50, label: 'High rate' }
   },
   board:    { loss: 1.5, firstTime: 3 },   // what the brief states in words
   defaults: { loss: 1.0, firstTime: 0 }    // the naive starting sliders
@@ -39,22 +42,32 @@ const seg = (key, label, mean, conc, n, firstTime, size, modelMean) => ({
  * it is what makes a prediction worth buying in one segment and not another (invariant L1). */
 
 export const segments = {
-  // mean, concentration, n, firstTime, size[, model mean]. Spread (sd): 0.029, 0.090, 0.054, 0.115.
-  established: () => seg('established', 'Established retailers', 0.965, 40, 8, false, 1.0),
-  restaurants: () => seg('restaurants', 'New restaurants',       0.880, 12, 7, false, 1.5),
-  trades:      () => seg('trades',      'First-time trades',     0.935, 20, 5, true,  0.6),
+  /* INVARIANT L10, the book's central claim, is a property of this segment list, not of tuning.
+   * Judgment's influence grows only if the number of LIVE decisions grows as prediction gets
+   * cheaper. Two rules make that happen:
+   *   1. Every base rate is robust across the whole slider grid (repeat: below 0.882 or above
+   *      0.957; first-time at size 0.6: above 0.922). An unpredicted segment then gets the same
+   *      bulk action from every reasonable weight setting, so it contributes no judgment influence.
+   *   2. Prices are set so purchases grow 1 -> 3 -> 4 across the rounds. Judgment goes live on a
+   *      segment only once a prediction is bought for it.
+   * Predicted exposure (applicants x stakes) therefore runs about 9 -> 15.9 -> 29.9. */
+  // mean, concentration, n, firstTime, size[, model mean]
+  established: () => seg('established', 'Established retailers', 0.970, 45, 5, false, 1.0),
+  restaurants: () => seg('restaurants', 'New restaurants',       0.860, 12, 6, false, 1.5),
+  workshops:   () => seg('workshops',   'Repair workshops',      0.845, 14, 5, false, 0.9),
+  trades:      () => seg('trades',      'First-time trades',     0.940, 20, 4, true,  0.6),
   /* THE SHIFTED SEGMENT MUST BE A REPEAT SEGMENT (invariant L10, found numerically).
    * The stale model over-rates these borrowers. For a FIRST-TIME segment the board's bonus makes
    * the board more lenient than the naive sliders, so against an inflated prediction the naive
    * player's higher cutoff accidentally protects them and judgment error goes NEGATIVE: the game
    * would reward never touching the sliders. For a repeat segment the board is the more cautious
    * of the two, so careful judgment is what protects you, which is the lesson. */
-  franchise:   () => seg('franchise',   'Franchise expansions',  0.740, 12, 6, false, 1.2, 0.950)
+  franchise:   () => seg('franchise',   'Franchise expansions',  0.740, 12, 6, false, 1.5, 0.950)
 };
 
 export const rounds = {
-  r1: { id: 'r1', tiers: ['standard'],              price: 0.15, sigma: 0.060, free: false },
-  r2: { id: 'r2', tiers: ['low','standard','high'], price: 0.06, sigma: 0.030, free: false },
+  r1: { id: 'r1', tiers: ['standard'],              price: 0.06, sigma: 0.060, free: false },
+  r2: { id: 'r2', tiers: ['low','standard','high'], price: 0.02, sigma: 0.030, free: false },
   r3: { id: 'r3', tiers: ['low','standard','high'], price: 0.00, sigma: 0.020, free: true  }
 };
 
@@ -69,7 +82,7 @@ const halfway = (SHIFT.modelBelief + SHIFT.truth) / 2;
 export function buildRound(id, opts = {}) {
   const base = { ...rounds[id] };
   if (id !== 'r3') {
-    base.segments = [segments.established(), segments.restaurants(), segments.trades()];
+    base.segments = [segments.established(), segments.restaurants(), segments.workshops(), segments.trades()];
     return base;
   }
   const shifted = segments.franchise();
@@ -81,6 +94,7 @@ export function buildRound(id, opts = {}) {
     shifted.modelUncertainty = 3;                              // and widened its error bars
     shifted.flagged = true;
   }
-  base.segments = [segments.established(), segments.restaurants(), segments.trades(), shifted];
+  base.segments = [segments.established(), segments.restaurants(), segments.workshops(),
+                   segments.trades(), shifted];
   return base;
 }
