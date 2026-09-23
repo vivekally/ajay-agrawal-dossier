@@ -61,10 +61,17 @@ give a colour its only definition inside a media query or a `[data-theme]` block
 Every text pair must clear WCAG AA (4.5:1) at the size it is used. Verified in both themes.
 
 **Charts do not inherit the theme for free.** SVG presentation attributes cannot take `var()`,
-so `app.js` reads the palette from the stylesheet via `readColors()` and every chart that bakes
-a colour into markup registers a redraw in `REDRAW`. Changing the theme calls `redrawAll()`,
-which re-reads the palette and rebuilds all ten charts while preserving each widget's current
-selection. **If you add a chart, register its redraw, or it will keep the old palette.**
+so `theme.js` reads the palette from the stylesheet via `AATheme.readColors()` and every chart that
+bakes a colour into markup registers itself with `AATheme.onRedraw(fn)`. Changing the theme calls
+`AATheme.redrawAll()`, which re-reads the palette and rebuilds every registered chart while
+preserving each widget's current selection. **If you add a chart, register its redraw, or it will
+keep the old palette.**
+
+`theme.js` is shared by `index.html` and the game page, so both honour one `aa-theme` preference
+and a reader who picks Dark on the dossier gets a dark game. It is a classic script, not a module:
+it must run before the page's own script. The three-line no-flash snippet stays inline in each
+page's `<head>` (it has to run before first paint, and a module would be deferred); keep the two
+copies identical. `AATheme.C` is held by reference, since `readColors()` mutates it in place.
 
 ## Confidence chips
 Every non-obvious factual claim carries a chip. Load-bearing UI, not decoration.

@@ -5,25 +5,12 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var esc = function (s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); };
   var NS = "http://www.w3.org/2000/svg";
-  /* Chart colours are read from the stylesheet rather than hard-coded, so the same
-     render function produces a light or a dark chart. Re-read on every theme change. */
-  var C = {};
-  var COLOR_MAP = { pm: "--pm", pp: "--pp", brass: "--flag", ok: "--ok", ink: "--ink",
-    soft: "--ink-soft", faint: "--ink-faint", rule: "--rule", ruleS: "--rule-strong",
-    sunk: "--paper-sunk", raised: "--paper-raised" };
-  var FALLBACK = { pm: "#1F5F7A", pp: "#A8451F", brass: "#7F631B", ok: "#3F6B45", ink: "#17171A",
-    soft: "#55555F", faint: "#6A6A75", rule: "#E2DED4", ruleS: "#CFC9BC", sunk: "#F0EDE5", raised: "#FFFDF8" };
-  function readColors() {
-    var cs = getComputedStyle(document.documentElement);
-    Object.keys(COLOR_MAP).forEach(function (k) {
-      C[k] = (cs.getPropertyValue(COLOR_MAP[k]) || "").trim() || FALLBACK[k];
-    });
-  }
-  readColors();
-
-  /* Every chart that bakes a colour into markup registers a redraw here. */
-  var REDRAW = [];
-  function redrawAll() { readColors(); REDRAW.forEach(function (f) { try { f(); } catch (e) {} }); }
+  /* Colours, the redraw registry, the segmented control and the theme toggle all live in
+     theme.js, which the game page shares so both honour one `aa-theme` preference.
+     C is held BY REFERENCE: readColors() mutates it, so a copy would strand these charts. */
+  var T = window.AATheme;
+  var C = T.C, seg = T.seg;
+  function onRedraw(fn) { T.onRedraw(fn); }
 
   /* ---------------- Tabs ---------------- */
   var tabs = $$(".tab"), panels = $$(".panel");
@@ -64,15 +51,6 @@
   window.addEventListener("hashchange", routeFromHash);
 
   /* ---------------- Segmented control helper ---------------- */
-  function seg(rootSel, attr, onPick) {
-    var root = $(rootSel); if (!root) return;
-    root.addEventListener("click", function (e) {
-      var b = e.target.closest("button"); if (!b) return;
-      $$("button", root).forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
-      onPick(b.getAttribute(attr));
-    });
-  }
-
   /* ---------------- 01.4 Salary chart ---------------- */
   /* Full disclosed history, 2004 to 2025. Figures carrying cents come from the per-year
      Sunshine List records; the rest are as the aggregator rounds them. */
@@ -140,7 +118,7 @@
     host.addEventListener("mouseover", function (e) { var r = e.target.closest(".sal-bar"); if (r) pick(+r.dataset.i); });
     cur = SALARY.length - 1;
     draw();
-    REDRAW.push(draw);
+    onRedraw(draw);
   })();
 
   /* ---------------- 03.2 Price change engine ---------------- */
@@ -182,7 +160,7 @@
       vd.innerHTML = '<span class="vt">Where we are</span><span class="vb">' + st.t + '</span><p class="vd">' + st.d + '</p>';
     }
     sl.addEventListener("input", render); render();
-    REDRAW.push(render);
+    onRedraw(render);
   })();
 
   /* ---------------- 03.3 Anatomy of a decision ---------------- */
@@ -242,7 +220,7 @@
     }
     host.addEventListener("click", function (e) { var g = e.target.closest(".anat"); if (g) pick(g.dataset.k); });
     draw();
-    REDRAW.push(draw);
+    onRedraw(draw);
   })();
 
   /* ---------------- 03.4 AI Canvas ---------------- */
@@ -373,7 +351,7 @@
       vd.style.borderColor = a >= THRESH ? C.ok : "";
     }
     sl.addEventListener("input", render); render();
-    REDRAW.push(render);
+    onRedraw(render);
   })();
 
   /* ---------------- Chapter maps ---------------- */
@@ -457,7 +435,7 @@
     }
     seg("#level-picker", "data-lvl", pick);
     pick("point");
-    REDRAW.push(function () { pick(cur); });
+    onRedraw(function () { pick(cur); });
   })();
 
   /* ---------------- 04.3 The Between Times ---------------- */
@@ -522,7 +500,7 @@
     host.addEventListener("click", function (e) { var c = e.target.closest(".bt-pt"); if (c) pick(c.dataset.s, +c.dataset.i); });
     seg("#between-picker", "data-series", function (v) { mode = v; render(); });
     render();
-    REDRAW.push(render);
+    onRedraw(render);
     det.innerHTML = "<h4>What the overlay actually shows</h4>" +
       "<p>At the same elapsed time, around year 14, electricity was powering under 5% of American manufacturing. AI is at 17% to 20% of American firms. On this measure AI is diffusing faster than electrification did, not slower.</p>" +
       "<p>That cuts slightly against the patient reading of the analogy. The book's defence is that adoption is not the same as transformation: firms using AI are overwhelmingly using it as a point solution, exactly as factories first used electric motors to turn the old line shaft. The forty-year lag was never about how many factories had electricity. It was about how long it took to stop building factories around a shaft that was no longer there.</p>" +
@@ -567,7 +545,7 @@
     }
     seg("#glue-picker", "data-glue", pick);
     pick("glued");
-    REDRAW.push(function () { pick(cur); });
+    onRedraw(function () { pick(cur); });
   })();
 
   /* ---------------- 04.5 Flint ---------------- */
@@ -611,7 +589,7 @@
     var cur = 0;
     seg("#flint-picker", "data-stage", function (v) { cur = +v; render(cur); });
     render(0);
-    REDRAW.push(function () { render(cur); });
+    onRedraw(function () { render(cur); });
   })();
 
   /* ---------------- 04.6 AI Systems Discovery Canvas ---------------- */
@@ -733,7 +711,7 @@
     host.addEventListener("click", function (e) { var c = e.target.closest(".arc-pt"); if (c) pick(+c.dataset.i); });
     seg("#arc-picker", "data-theme", function (v) { filter = v; render(); });
     render();
-    REDRAW.push(render);
+    onRedraw(render);
   })();
 
   /* ---------------- 06.1 CDL equity value ---------------- */
@@ -777,43 +755,7 @@
     host.addEventListener("mouseover", function (e) { var r = e.target.closest(".cdl-bar"); if (r) pick(+r.dataset.i); });
     host.addEventListener("click", function (e) { var r = e.target.closest(".cdl-bar"); if (r) pick(+r.dataset.i); });
     draw();
-    REDRAW.push(draw);
-  })();
-
-  /* ---------------- Theme control ---------------- */
-  (function theme() {
-    var ctl = $(".themectl"); if (!ctl) return;
-    var KEY = "aa-theme", root = document.documentElement;
-    var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
-
-    function stored() {
-      try { var v = localStorage.getItem(KEY); return (v === "dark" || v === "light") ? v : "system"; }
-      catch (e) { return "system"; }
-    }
-    function apply(mode, persist) {
-      if (mode === "system") root.removeAttribute("data-theme");
-      else root.setAttribute("data-theme", mode);
-      if (persist) {
-        try { mode === "system" ? localStorage.removeItem(KEY) : localStorage.setItem(KEY, mode); }
-        catch (e) { /* private window, or site data blocked: the choice just will not persist */ }
-      }
-      $$("button", ctl).forEach(function (b) {
-        b.setAttribute("aria-pressed", b.getAttribute("data-theme-set") === mode ? "true" : "false");
-      });
-      // Charts bake colours into markup, so they have to be rebuilt from the new palette.
-      requestAnimationFrame(redrawAll);
-    }
-    ctl.addEventListener("click", function (e) {
-      var b = e.target.closest("button[data-theme-set]"); if (!b) return;
-      apply(b.getAttribute("data-theme-set"), true);
-    });
-    // Follow the OS while in Auto.
-    if (mq) {
-      var onSys = function () { if (stored() === "system") requestAnimationFrame(redrawAll); };
-      if (mq.addEventListener) mq.addEventListener("change", onSys);
-      else if (mq.addListener) mq.addListener(onSys);
-    }
-    apply(stored(), false);
+    onRedraw(draw);
   })();
 
   routeFromHash();
