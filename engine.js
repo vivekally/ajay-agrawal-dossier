@@ -393,3 +393,28 @@ export function round3Decompose({ facts, weights, seed, hours, buildR3, loopCost
     gapToPar: best.value - vAct
   };
 }
+
+/* One actual draw for a round-3 session. Same rule as simulateRound: used only for the
+ * "what actually happened" line, never for the decomposition. */
+export function simulateSession({ session, facts, weights, referred = new Set(), seed, loopCost = 0 }) {
+  const rand = mulberry32(seed);
+  let realized = -loopCost;
+  const outcomes = [];
+  session.applicants.forEach((a, i) => {
+    const decideAt = referred.has(i) ? a.p : a.pHatModel;
+    const act = bestAction(decideAt, a.seg, facts, weights, session.round.tiers);
+    let points = 0, accepted = false, repaid = false;
+    if (act !== DECLINE) {
+      const t = facts.tiers[act], size = a.seg.size === undefined ? 1 : a.seg.size;
+      accepted = rand() < t.a;
+      if (accepted) {
+        repaid = rand() < a.p;
+        points = (repaid ? t.m * size : -facts.L * size * facts.board.loss)
+               + (a.seg.firstTime ? facts.board.firstTime : 0);
+      }
+    }
+    realized += points;
+    outcomes.push({ i, action: act, accepted, repaid, points });
+  });
+  return { realized, outcomes };
+}

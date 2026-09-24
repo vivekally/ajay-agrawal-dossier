@@ -1,0 +1,127 @@
+/* Threshold: game-specific components. Tokens, type and both themes come from style.css.
+   Losses are hatched ink, never ember: ember is the Power and Prediction accent on the dossier,
+   and reusing it here would blur the two books. */
+
+body.game { padding-bottom: 80px; }
+
+.gamebar { position: sticky; top: 0; z-index: 50; background: var(--paper-trans);
+  backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule); }
+.gamebar-in { display: flex; align-items: center; gap: 16px; padding-block: 11px; }
+.gamebar-name { font-family: var(--serif); font-weight: 600; font-size: 1.05rem; color: var(--ink);
+  text-decoration: none; letter-spacing: -.01em; }
+.gamebar-where { margin: 0; flex: 1; font-family: var(--mono); font-size: .7rem; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--ink-faint); display: flex; gap: 10px; }
+.gamebar .themectl { position: static; }
+
+.screen { padding-block: 34px 20px; animation: fade .18s ease-out; }
+.screen h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); margin-bottom: .35em; }
+.screen h2 { font-size: clamp(1.25rem, 3vw, 1.6rem); }
+.lede-g { font-size: 1.05rem; color: var(--ink-soft); max-width: 62ch; }
+
+.actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 24px; }
+.btn { appearance: none; border: 1px solid var(--pm); background: var(--pm); color: var(--on-accent);
+  font-family: var(--sans); font-weight: 700; font-size: .92rem; padding: 12px 22px; border-radius: 3px;
+  cursor: pointer; min-height: 44px; transition: filter .16s ease-out; }
+.btn:hover { filter: brightness(1.08); }
+.btn[disabled] { opacity: .45; cursor: not-allowed; filter: none; }
+.btn.ghost { background: none; color: var(--ink-soft); border-color: var(--rule-strong); font-weight: 600; }
+.btn.ghost:hover { color: var(--ink); border-color: var(--ink-faint); }
+
+/* the brief, pinned wherever values are set: translating it IS the skill being tested */
+.brief { background: var(--paper-raised); border: 1px solid var(--rule); border-left: 0;
+  border-radius: 4px; padding: 16px 18px; margin-bottom: 20px; }
+.brief p { margin: 0 0 .6em; font-size: .95rem; color: var(--ink-soft); max-width: none; }
+.brief p:last-child { margin-bottom: 0; }
+.brief b { color: var(--ink); }
+
+.sliderrow { margin: 20px 0 6px; }
+.sliderrow label { display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+  font-weight: 600; font-size: .92rem; margin-bottom: 6px; }
+.sliderrow .val { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--pm); font-size: 1rem; }
+.sliderrow input[type=range] { width: 100%; }
+
+.saysline { background: var(--paper-raised); border: 1px solid var(--rule); border-radius: 4px;
+  padding: 14px 16px; margin-top: 16px; font-size: 1rem; }
+.saysline b { font-family: var(--mono); color: var(--pm); }
+
+table.game { width: 100%; }
+td .chk { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; font-weight: 600; }
+td .chk input { width: 18px; height: 18px; accent-color: var(--pm); }
+
+.hours { font-family: var(--mono); font-size: .84rem; color: var(--ink-soft);
+  border: 1px solid var(--rule-strong); border-radius: 3px; padding: 8px 12px; display: inline-block; }
+.hours.spent { color: var(--pp); border-color: var(--pp); }
+.flagchip { font-family: var(--mono); font-size: .6rem; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--flag); border: 1px solid var(--flag); border-radius: 2px; padding: 2px 5px; white-space: nowrap; }
+
+.headline { font-family: var(--serif); font-size: clamp(1.2rem, 3vw, 1.5rem); font-weight: 600;
+  line-height: 1.35; margin: 4px 0 20px; max-width: 34ch; }
+.headline .num { color: var(--pm); }
+
+.bridge { display: grid; grid-template-columns: minmax(120px, 190px) 1fr 62px; gap: 10px;
+  align-items: center; font-size: .84rem; margin: 7px 0; }
+.bridge .lbl { color: var(--ink-soft); }
+.bridge .lbl b { color: var(--ink); }
+.bridge .lbl i { font-style: normal; color: var(--ink-faint); font-size: .92em; display: block; }
+.bridge .amt { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.btrack { position: relative; height: 22px; background: var(--paper-sunk); border: 1px solid var(--rule); border-radius: 2px; }
+.bseg { position: absolute; top: 0; bottom: 0; border-radius: 1px; }
+.bseg.gain { background: var(--pm); }
+.bseg.soft { background: var(--pm); opacity: .4; }
+.bseg.grey { background: var(--ink-faint); opacity: .5; }
+.bseg.luck { background: var(--ok); }
+.bseg.loss { background: repeating-linear-gradient(45deg, var(--ink) 0 2px, transparent 2px 6px);
+  border: 1px solid var(--ink); }
+
+.qcard { border: 1px solid var(--rule); border-radius: 4px; background: var(--paper-raised);
+  padding: 18px 20px; margin-bottom: 14px; }
+.qcard h3 { font-family: var(--sans); font-size: 1rem; margin-bottom: 12px; }
+.opt { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--rule);
+  border-radius: 3px; margin-bottom: 8px; cursor: pointer; min-height: 44px; font-size: .92rem; }
+.opt:hover { border-color: var(--pm); }
+.opt input { margin-top: 3px; accent-color: var(--pm); }
+.opt.is-right { border-color: var(--ok); }
+.opt.is-chosen { background: var(--paper-sunk); }
+
+.canvasform { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.canvasform .cell3 { grid-column: span 4; }
+@media (max-width: 860px) { .canvasform { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .canvasform { grid-template-columns: 1fr; } }
+.ccell { border: 1px solid var(--rule-strong); border-radius: 3px; background: var(--paper-raised); padding: 12px; }
+.ccell label { display: block; font-weight: 700; font-size: .85rem; margin-bottom: 4px; }
+.ccell .hint { display: block; font-size: .72rem; color: var(--ink-faint); margin-bottom: 8px; line-height: 1.4; }
+.ccell textarea { width: 100%; min-height: 78px; font-family: var(--sans); font-size: .88rem;
+  color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 3px;
+  padding: 8px; resize: vertical; }
+
+.debugpanel { margin-top: 26px; border: 1px dashed var(--rule-strong); border-radius: 4px; padding: 14px 16px; }
+.debugpanel pre { font-family: var(--mono); font-size: .72rem; color: var(--ink-soft);
+  white-space: pre-wrap; margin: 0; }
+
+@media print {
+  .gamebar, .actions, .debugpanel, noscript { display: none !important; }
+  body.game { padding: 0; }
+  .ccell textarea { border: none; min-height: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .screen { animation: none; }
+  .bseg, .btn { transition: none; }
+}
+
+@media (max-width: 620px) {
+  /* The bar must not wrap into a column. Each screen's own heading already names the step, so the
+     bar keeps the one thing the heading does not say: which round you are in. */
+  .gamebar-in { gap: 10px; }
+  .gamebar-where { font-size: .62rem; white-space: nowrap; }
+  #bar-step { display: none; }
+  body.game .themectl button { min-height: 44px; padding: 10px 9px; }
+
+  /* Label above, bar below. Side by side leaves the bar about 100px wide, which is unreadable. */
+  .bridge { grid-template-columns: 1fr auto; grid-template-areas: "lbl amt" "trk trk"; row-gap: 5px; margin: 14px 0; }
+  .bridge .lbl { grid-area: lbl; }
+  .bridge .amt { grid-area: amt; }
+  .bridge .btrack { grid-area: trk; }
+
+  .canvasform .cell3 { grid-column: span 1; }
+  .actions .btn { flex: 1 1 auto; }
+}

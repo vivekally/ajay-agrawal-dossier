@@ -281,3 +281,11 @@ footer p{max-width:70ch}
   .card{padding:18px}
   .masthead .wrap{padding-block:62px 26px} /* top reserved for the absolute .themectl */
 }
+
+/* Link out to the game from the Prediction Machines tab. */
+.playcard{border:1px solid var(--pm); border-radius:4px; background:var(--paper-raised); padding:20px 22px; margin-bottom:26px}
+.playcard h3{margin:0 0 6px; color:var(--pm)}
+.playcard p{font-size:.92rem; color:var(--ink-soft); margin-bottom:14px}
+.playlink{display:inline-block; background:var(--pm); color:var(--on-accent); font-weight:700; font-size:.9rem;
+  padding:11px 20px; border-radius:3px; text-decoration:none; min-height:44px; line-height:22px}
+.playlink:hover{filter:brightness(1.08)}

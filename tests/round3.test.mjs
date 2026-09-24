@@ -6,7 +6,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   prepareRound, buildSession, bestReferrals, sessionValue, expectedReviewGain,
-  round3Decompose, mulberry32, threshold, parSearch, roundValue, bestAction
+  round3Decompose, mulberry32, threshold, parSearch, roundValue, bestAction, simulateSession
 } from '../engine.js';
 import { facts, buildRound, segments, LOOP_COST, SHIFT } from '../scenarios/lending.js';
 
@@ -168,4 +168,19 @@ test('an unpredicted segment gives the same bulk call to every reasonable weight
     }
     assert.equal(calls.size, 1, `${seg.key} flips in bulk across the slider grid: ${[...calls].join('/')}`);
   }
+});
+
+test('a round-3 draw is reproducible and its luck averages out', () => {
+  const round = prepareRound(buildRound('r3', { loop: true }));
+  const session = buildSession({ round, seed: 11 });
+  const referred = bestReferrals({ session, facts, weights: BOARD, hours: HOURS }).referred;
+  const a = simulateSession({ session, facts, weights: BOARD, referred, seed: 4 });
+  const b = simulateSession({ session, facts, weights: BOARD, referred, seed: 4 });
+  assert.equal(a.realized, b.realized, 'same seed, same outcome');
+  assert.equal(a.outcomes.length, session.applicants.length);
+  const expected = sessionValue({ session, facts, weights: BOARD, referred });
+  const draws = [];
+  for (let s = 0; s < 300; s++) draws.push(simulateSession({ session, facts, weights: BOARD, referred, seed: s }).realized);
+  const meanLuck = draws.reduce((x, y) => x + y, 0) / draws.length - expected;
+  assert.ok(Math.abs(meanLuck) < 0.12 * Math.abs(expected), `mean luck ${meanLuck.toFixed(2)} vs expected ${expected.toFixed(2)}`);
 });
